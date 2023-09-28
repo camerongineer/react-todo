@@ -1,6 +1,6 @@
 import React from 'react';
-const programTitle = "Todo List";
-const todoList = [
+const PROGRAM_TITLE = "Todo List";
+const TODO_LIST = [
   {
     id: 1,
     title: "Begin To-Do app",
@@ -26,11 +26,9 @@ const todoList = [
 function App() {
   return (
       <div>
-        <h1>{programTitle}</h1>
+        <h1>{PROGRAM_TITLE}</h1>
         <ul>
-          {todoList.map(function(item) {
-            return <li key={item.id}>{item.title}</li>
-          })}
+          {TODO_LIST.map(item => <li key={item.id}>{item.title}</li>)}
         </ul>
       </div>
   );
