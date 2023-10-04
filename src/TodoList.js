@@ -1,7 +1,5 @@
 import React from 'react';
 
-let id = 0
-
 const LIST_TITLES = [
     'Begin Todo app',
     'Checkout new github branch',
@@ -12,16 +10,8 @@ const LIST_TITLES = [
 ];
 
 const buildList = (titles) => {
-    const todoList = [];
-    titles.forEach((title) => {
-        todoList.push(
-            {
-                id: ++id,
-                title: title,
-            }
-        );
-    });
-    return todoList;
+    let id = 0;
+    return titles.map(title => ({ id: ++id, title: title }));
 };
 
 const TodoList = () => (
