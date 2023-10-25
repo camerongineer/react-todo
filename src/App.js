@@ -4,7 +4,7 @@ import AddTodoForm from "./AddTodoForm";
 
 const App = () => {
     const [todoList, setTodoList] = useState([]);
-    const addTodo = (newTodo) => setTodoList(todoList => [...todoList, newTodo]);
+    const addTodo = (newTodo) => setTodoList(prevTodoList => [...prevTodoList, newTodo]);
     
     return (
         <div>
