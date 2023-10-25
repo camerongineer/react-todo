@@ -1,18 +1,17 @@
-import React, {useState} from 'react';
-import TodoList from './TodoList';
-import AddTodoForm from './AddTodoForm';
-import {LIST_TITLES} from './data/data';
-import {buildList} from './utils/listUtils';
+import React, { useState } from "react";
+import TodoList from "./TodoList";
+import AddTodoForm from "./AddTodoForm";
 
 const App = () => {
-    const [newTodo, setNewTodo] = useState('');
+    const [todoList, setTodoList] = useState([]);
+    const addTodo = (newTodo) => setTodoList(prevTodoList => [...prevTodoList, newTodo]);
+    
     return (
         <div>
             <h1>Todo List</h1>
             <hr/>
-            <AddTodoForm onAddToDo={setNewTodo}/>
-            <p>{newTodo}</p>
-            <TodoList list={buildList(LIST_TITLES)}/>
+            <AddTodoForm onAddToDo={addTodo}/>
+            <TodoList todoList={todoList}/>
             <hr/>
         </div>
     );
