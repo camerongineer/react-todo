@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const INITIAL_TITLE_VALUE = "";
 const TITLE_ID = "todoTitle";
 
-const AddTodoForm = ({ onAddToDo }) => {
+const AddEducationForm = ({ onAddToDo }) => {
     const [todoTitle, setTodoTitle] = useState(INITIAL_TITLE_VALUE);
     
     const handleTitleChange = (event) => {
@@ -22,7 +22,7 @@ const AddTodoForm = ({ onAddToDo }) => {
     
     return (
         <form onSubmit={handleAddTodo}>
-            <label htmlFor={TITLE_ID}>Title:&nbsp;
+            <label htmlFor={TITLE_ID}>Education:&nbsp;
                 <input id={TITLE_ID} name="title" value={todoTitle} onChange={handleTitleChange}/>
             </label>
             <button type="submit">Add</button>
@@ -30,4 +30,4 @@ const AddTodoForm = ({ onAddToDo }) => {
     );
 };
 
-export default AddTodoForm;
+export default AddEducationForm;
