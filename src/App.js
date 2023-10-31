@@ -37,13 +37,15 @@ const App = () => {
     const buildContent = () => {
         let content = "";
         content += `My name is ${myName}. `;
-        content += `My education is ${educationList.map(education => education.title).join(", ")}. `;
-        content += `My hobbies are ${hobbiesList.map(hobbies => hobbies.title).join(", ")}. `;
-        content += `My skills are ${skillsList.map(skill => skill.title).join(", ")}. `;
+        content += `My education is ${joinList(educationList)}. `;
+        content += `My hobbies are ${joinList(hobbiesList)}. `;
+        content += `My skills are ${joinList(skillsList)}. `;
         content += "Please create a one page resume for a software engineering job that highlights my skills.";
         console.log(content);
         return content;
     };
+    
+    const joinList = (list) => list.map(listItem => listItem.title).join(", ");
     
     return (
         <>
