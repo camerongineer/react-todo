@@ -50,27 +50,19 @@ const App = () => {
     return (
         <>
             <h1>Open AI Resume Builder</h1>
-            <p>
-                <hr/>
-                <MyName value={myName} onValueChange={handleName}/>
-                <hr/>
-            </p>
-            <p>
-                <AddAttributeForm labelText="Education" onAddAttribute={addEducation}/>
-                <AttributeList attributeList={educationList}/>
-            </p>
             <hr/>
-            <p>
-                <AddAttributeForm labelText="Hobbies" onAddAttribute={addHobbies}/>
-                <AttributeList attributeList={hobbiesList}/>
-            </p>
+            <MyName value={myName} onValueChange={handleName}/>
             <hr/>
-            <p>
-                <AddAttributeForm labelText="Skills" onAddAttribute={addSkills}/>
-                <AttributeList attributeList={skillsList}/>
-            </p>
+            <AddAttributeForm labelText="Education" onAddAttribute={addEducation}/>
+            <AttributeList attributeList={educationList}/>
             <hr/>
-            <button onClick={getCompletion}>Generate Resume</button>
+            <AddAttributeForm labelText="Hobbies" onAddAttribute={addHobbies}/>
+            <AttributeList attributeList={hobbiesList}/>
+            <hr/>
+            <AddAttributeForm labelText="Skills" onAddAttribute={addSkills}/>
+            <AttributeList attributeList={skillsList}/>
+            <hr/>
+            <button title={"generate"} type={"submit"} onClick={getCompletion}>Generate Resume</button>
             <div
                 dangerouslySetInnerHTML={{ __html: response.replaceAll("\n", "<br/>") }}
             />

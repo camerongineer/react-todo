@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
 const INITIAL_TITLE_VALUE = "";
-const TITLE_ID = "attributeTitle";
 
 const AddAttributeForm = ({ onAddAttribute, labelText }) => {
     const [attributeTitle, setAttributeTitle] = useState(INITIAL_TITLE_VALUE);
+    const attributeId = "attribute" + labelText;
     
     const handleTitleChange = (event) => {
         const newAttributeTitle = event.target.value;
@@ -22,8 +22,8 @@ const AddAttributeForm = ({ onAddAttribute, labelText }) => {
     
     return (
         <form onSubmit={handleAddTodo}>
-            <label htmlFor={TITLE_ID}>{labelText}:&nbsp;
-                <input id={TITLE_ID} name="title" value={attributeTitle} onChange={handleTitleChange}/>
+            <label htmlFor={attributeId}>{labelText}:&nbsp;
+                <input id={attributeId} name="title" value={attributeTitle} onChange={handleTitleChange}/>
             </label>
             <button type="submit">Add</button>
         </form>
