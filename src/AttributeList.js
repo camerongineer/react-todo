@@ -1,9 +1,9 @@
 import React from "react";
 import ListItem from "./ListItem";
 
-const HobbiesList = ({ todoList }) => (
-    <ul>{todoList.map(listItem =>
+const AttributeList = ({ attributeList }) => (
+    <ul>{attributeList.map(listItem =>
         <ListItem key={listItem.id} item={listItem}/>)}
     </ul>);
 
-export default HobbiesList;
+export default AttributeList;
