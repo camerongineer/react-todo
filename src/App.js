@@ -12,9 +12,13 @@ const App = () => {
     const [hobbiesList, setHobbiesList] = useState([]);
     const [myName, setMyName] = useState("");
     const [response, setResponse] = useState("");
-    const addEducation = (newTodo) => setEducationList(prevTodoList => [...prevTodoList, newTodo]);
-    const addHobbies = (newTodo) => setHobbiesList(prevTodoList => [...prevTodoList, newTodo]);
-    const addSkills = (newTodo) => setSkillsList(prevTodoList => [...prevTodoList, newTodo]);
+    
+    const addEducation = (newEducation) => setEducationList(prevEducationList => [...prevEducationList, newEducation]);
+    const addHobbies = (newHobby) => setHobbiesList(prevHobbiesList => [...prevHobbiesList, newHobby]);
+    const addSkills = (newSkill) => setSkillsList(prevSkillsList => [...prevSkillsList, newSkill]);
+    const handleName = (event) => {
+        setMyName(event.target.value);
+    };
     
     const getCompletion = async () => {
         const openai = new OpenAI({
@@ -30,13 +34,9 @@ const App = () => {
         setResponse(res);
     };
     
-    const handleName = (event) => {
-        setMyName(event.target.value);
-    };
-    
     const buildContent = () => {
         let content = "";
-        content += `My name is ${myName}.`;
+        content += `My name is ${myName}. `;
         content += `My education is ${educationList.map(education => education.title).join(", ")}. `;
         content += `My hobbies are ${hobbiesList.map(hobbies => hobbies.title).join(", ")}. `;
         content += `My skills are ${skillsList.map(skill => skill.title).join(", ")}. `;
@@ -48,8 +48,11 @@ const App = () => {
     return (
         <>
             <h1>Open AI Resume Builder</h1>
-            <hr/>
-            <MyName value={myName} onValueChange={handleName}/>
+            <p>
+                <hr/>
+                <MyName value={myName} onValueChange={handleName}/>
+                <hr/>
+            </p>
             <p>
                 <AddAttributeForm label="Education" onAddAttribute={addEducation}/>
                 <AttributeList attributeList={educationList}/>
@@ -65,7 +68,7 @@ const App = () => {
                 <AttributeList attributeList={skillsList}/>
             </p>
             <hr/>
-            <button onClick={getCompletion}>Response</button>
+            <button onClick={getCompletion}>Generate Resume</button>
             <div
                 dangerouslySetInnerHTML={{ __html: response.replaceAll("\n", "<br/>") }}
             />
