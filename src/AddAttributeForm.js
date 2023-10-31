@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const INITIAL_TITLE_VALUE = "";
 const TITLE_ID = "attributeTitle";
 
-const AddAttributeForm = ({ onAddAttribute, label: labelText }) => {
+const AddAttributeForm = ({ onAddAttribute, labelText }) => {
     const [attributeTitle, setAttributeTitle] = useState(INITIAL_TITLE_VALUE);
     
     const handleTitleChange = (event) => {

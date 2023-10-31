@@ -54,17 +54,17 @@ const App = () => {
                 <hr/>
             </p>
             <p>
-                <AddAttributeForm label="Education" onAddAttribute={addEducation}/>
+                <AddAttributeForm labelText="Education" onAddAttribute={addEducation}/>
                 <AttributeList attributeList={educationList}/>
             </p>
             <hr/>
             <p>
-                <AddAttributeForm label="Hobbies" onAddAttribute={addHobbies}/>
+                <AddAttributeForm labelText="Hobbies" onAddAttribute={addHobbies}/>
                 <AttributeList attributeList={hobbiesList}/>
             </p>
             <hr/>
             <p>
-                <AddAttributeForm label="Skills" onAddAttribute={addSkills}/>
+                <AddAttributeForm labelText="Skills" onAddAttribute={addSkills}/>
                 <AttributeList attributeList={skillsList}/>
             </p>
             <hr/>
