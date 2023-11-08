@@ -4,7 +4,7 @@ import InputWithLabel from "./InputWithLabel";
 const INITIAL_TITLE_VALUE = "";
 const TITLE_ID = "todoTitle";
 
-const AddTodoForm = ({ onAddToDo }) => {
+const AddTodoForm = ({ onAddTodo }) => {
     const [todoTitle, setTodoTitle] = useState(INITIAL_TITLE_VALUE);
     
     const handleTitleChange = (event) => {
@@ -14,7 +14,7 @@ const AddTodoForm = ({ onAddToDo }) => {
     
     const handleAddTodo = (event) => {
         event.preventDefault();
-        onAddToDo({
+        onAddTodo({
             title: todoTitle,
             id: Date.now()
         });

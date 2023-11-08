@@ -13,7 +13,6 @@ const InputWithLabel = ({
     useEffect(() => {
         if (isFocused && inputRef.current) {
             inputRef.current.focus();
-            console.log("focus");
         }
     });
     
