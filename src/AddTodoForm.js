@@ -25,8 +25,9 @@ const AddTodoForm = ({ onAddToDo }) => {
         <form onSubmit={handleAddTodo}>
             <InputWithLabel inputValue={todoTitle}
                             onInputChange={handleTitleChange}
+                            isFocused
                             inputId={TITLE_ID}>
-                Title:&nbsp;
+                <strong>Title:</strong>
             </InputWithLabel>
             <button type="submit">Add</button>
         </form>
