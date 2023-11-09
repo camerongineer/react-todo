@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import InputWithLabel from "./InputWithLabel";
 
 const INITIAL_TITLE_VALUE = "";
 const TITLE_ID = "todoTitle";
 
-const AddTodoForm = ({ onAddToDo }) => {
+const AddTodoForm = ({ onAddTodo }) => {
     const [todoTitle, setTodoTitle] = useState(INITIAL_TITLE_VALUE);
     
     const handleTitleChange = (event) => {
@@ -13,7 +14,13 @@ const AddTodoForm = ({ onAddToDo }) => {
     
     const handleAddTodo = (event) => {
         event.preventDefault();
-        onAddToDo({
+        
+        if (!todoTitle.trim().length) {
+            alert("You must provide a title!");
+            return;
+        }
+        
+        onAddTodo({
             title: todoTitle,
             id: Date.now()
         });
@@ -22,9 +29,12 @@ const AddTodoForm = ({ onAddToDo }) => {
     
     return (
         <form onSubmit={handleAddTodo}>
-            <label htmlFor={TITLE_ID}>Title:&nbsp;
-                <input id={TITLE_ID} name="title" value={todoTitle} onChange={handleTitleChange}/>
-            </label>
+            <InputWithLabel inputValue={todoTitle}
+                            onInputChange={handleTitleChange}
+                            isFocused
+                            inputId={TITLE_ID}>
+                <strong>Title:</strong>
+            </InputWithLabel>
             <button type="submit">Add</button>
         </form>
     );
