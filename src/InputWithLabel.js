@@ -8,7 +8,7 @@ const InputWithLabel = ({
     isFocused,
     children
 }) => {
-    const inputRef = useRef();
+    const inputRef = useRef(null);
     
     useEffect(() => {
         if (isFocused && inputRef.current) {
