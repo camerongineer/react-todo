@@ -14,6 +14,12 @@ const AddTodoForm = ({ onAddTodo }) => {
     
     const handleAddTodo = (event) => {
         event.preventDefault();
+        
+        if (!todoTitle.trim().length) {
+            alert("You must provide a title!");
+            return;
+        }
+        
         onAddTodo({
             title: todoTitle,
             id: Date.now()
