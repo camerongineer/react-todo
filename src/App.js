@@ -23,7 +23,7 @@ const App = () => {
         if (!isLoading) {
             localStorage.setItem("todoList", JSON.stringify(todoList));
         }
-    }, [todoList]);
+    }, [isLoading, todoList]);
     
     return (
         <>
