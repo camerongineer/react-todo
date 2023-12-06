@@ -20,10 +20,7 @@ const AddTodoForm = ({ onAddTodo }) => {
             return;
         }
         
-        onAddTodo({
-            title: todoTitle,
-            id: Date.now()
-        });
+        onAddTodo(todoTitle);
         setTodoTitle(INITIAL_TITLE_VALUE);
     };
     
