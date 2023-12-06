@@ -6,7 +6,8 @@ const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
 const TABLE_NAME = process.env.REACT_APP_TABLE_NAME;
 const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
-const SORT_BY_LAST_MODIFIED_TIME = "?sort%5B0%5D%5Bfield%5D=lastModifiedTime&sort%5B0%5D%5Bdirection%5D=asc";
+// Sorts todos by lastModifiedTime if this entry exists as field type
+const SORT_BY_LAST_MODIFIED_TIME = ""; //"?sort%5B0%5D%5Bfield%5D=lastModifiedTime&sort%5B0%5D%5Bdirection%5D=asc";
 
 const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
 
