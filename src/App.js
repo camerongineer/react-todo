@@ -4,7 +4,8 @@ import AddTodoForm from "./AddTodoForm";
 
 const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
-const TABLE_NAME = process.env.REACT_APP_AIRTABLE_TABLE_NAME;
+const TABLE_NAME = process.env.REACT_APP_TABLE_NAME;
+const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
 const SORT_BY_LAST_MODIFIED_TIME = "?sort%5B0%5D%5Bfield%5D=lastModifiedTime&sort%5B0%5D%5Bdirection%5D=asc";
 
 const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
@@ -13,7 +14,7 @@ const fetchTodos = async () => {
     try {
         const response = await fetch(AIRTABLE_URL + SORT_BY_LAST_MODIFIED_TIME, {
             headers: {
-                "Authorization": `Bearer ${process.env.REACT_APP_AIRTABLE_API_TOKEN}`
+                "Authorization": `Bearer ${API_TOKEN}`
             }
         });
         
@@ -46,7 +47,7 @@ const postTodo = async (newTodo) => {
         const response = await fetch(AIRTABLE_URL, {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${process.env.REACT_APP_AIRTABLE_API_TOKEN}`,
+                "Authorization": `Bearer ${API_TOKEN}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(airtableData)
@@ -70,7 +71,7 @@ const deleteTodo = async (id) => {
         const response = await fetch(deleteUrl, {
             method: "DELETE",
             headers: {
-                "Authorization": `Bearer ${process.env.REACT_APP_AIRTABLE_API_TOKEN}`,
+                "Authorization": `Bearer ${API_TOKEN}`,
                 "Content-Type": "application/json"
             }
         });
