@@ -11,81 +11,25 @@ const SORT_BY_LAST_MODIFIED_TIME = ""; //"?sort%5B0%5D%5Bfield%5D=lastModifiedTi
 
 const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
 
-const fetchTodos = async () => {
-    try {
-        const response = await fetch(AIRTABLE_URL + SORT_BY_LAST_MODIFIED_TIME, {
-            headers: {
-                "Authorization": `Bearer ${API_TOKEN}`
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-        }
-        
-        const todosFromAPI = await response.json();
-        
-        return todosFromAPI.records.map(todo => {
-            return {
-                id: todo.id,
-                title: todo.fields.title
-            };
-        });
-    } catch (error) {
-        console.log(error.message);
-        return [];
-    }
-};
-
-const postTodo = async (newTodo) => {
-    const airtableData = {
-        fields: {
-            title: newTodo
-        }
-    };
+const fetchAirtableData = async ({ method, url, body }) => {
+    const response = await fetch(`${AIRTABLE_URL}${url ?? ""}`, {
+        method,
+        headers: {
+            "Authorization": `Bearer ${API_TOKEN}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    });
     
-    try {
-        const response = await fetch(AIRTABLE_URL, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${API_TOKEN}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(airtableData)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Error has occurred: ${response.status}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.log(error.message);
-        return null;
+    if (!response.ok) {
+        return Promise.reject(`Error: ${response.status}`);
     }
-};
-
-const deleteTodo = async (id) => {
-    const deleteUrl = `${AIRTABLE_URL}/${id}`;
     
-    try {
-        const response = await fetch(deleteUrl, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${API_TOKEN}`,
-                "Content-Type": "application/json"
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Error has occurred: ${response.status}`);
-        }
-        
+    if (response.headers.get("Content-Type").includes("application/json")) {
         return await response.json();
-    } catch (error) {
-        console.log(error.message);
-        return null;
     }
+    
+    return null;
 };
 
 const App = () => {
@@ -93,21 +37,54 @@ const App = () => {
     const [isLoading, setIsLoading] = useState(true);
     
     const addTodo = async (newTodo) => {
-        await postTodo(newTodo);
+        const airtableData = {
+            fields: {
+                title: newTodo
+            }
+        };
+        try {
+            await fetchAirtableData({ method: "POST", body: airtableData });
+        } catch (error) {
+            console.log(error.message);
+        }
         await loadTodos();
     };
+    
     const removeTodo = async (id) => {
-        await deleteTodo(id);
+        try {
+            await fetchAirtableData({ method: "DELETE", url: `/${id}` });
+        } catch (error) {
+            console.log(error.message);
+        }
         await loadTodos();
     };
     
     useEffect(() => {
-        const loadData = async () => await loadTodos();
+        const loadData = async () => {
+            setIsLoading(true);
+            await loadTodos();
+            setIsLoading(false);
+        };
         loadData();
-        setIsLoading(false);
     }, []);
     
-    const loadTodos = async () => setTodoList(await fetchTodos());
+    const loadTodos = async () => {
+        try {
+            const response = await fetchAirtableData({ method: "GET", url: SORT_BY_LAST_MODIFIED_TIME });
+            
+            const todosFromAPI = await response;
+            
+            setTodoList(todosFromAPI.records.map(todo => {
+                return {
+                    id: todo.id,
+                    title: todo.fields.title
+                };
+            }));
+        } catch (error) {
+            console.log(error.message);
+            setTodoList([]);
+        }
+    };
     
     return (
         <>
