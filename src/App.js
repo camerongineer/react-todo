@@ -46,6 +46,24 @@ const App = () => {
     const [todoList, setTodoList] = useState([]);
     const [loading, setLoading] = useState(true);
     
+    const loadTodos = async () => {
+        try {
+            const response = await fetchAirtableData({ method: "GET", url: SORT_BY_LAST_MODIFIED_TIME });
+            
+            const todosFromAPI = await response;
+            
+            setTodoList(todosFromAPI.records.map(todo => {
+                return {
+                    id: todo.id,
+                    title: todo.fields.title
+                };
+            }));
+        } catch (error) {
+            console.log(error.message);
+            setTodoList([]);
+        }
+    };
+    
     const addTodo = async (newTodo) => {
         const airtableData = {
             fields: {
@@ -111,25 +129,6 @@ const App = () => {
         };
         loadData();
     }, []);
-    
-    const loadTodos = async () => {
-        try {
-            debugger
-            const response = await fetchAirtableData({ method: "GET", url: SORT_BY_LAST_MODIFIED_TIME });
-            
-            const todosFromAPI = await response;
-            
-            setTodoList(todosFromAPI.records.map(todo => {
-                return {
-                    id: todo.id,
-                    title: todo.fields.title
-                };
-            }));
-        } catch (error) {
-            console.log(error.message);
-            setTodoList([]);
-        }
-    };
     
     return (
         <>
