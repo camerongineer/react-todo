@@ -18,16 +18,18 @@ const fetchAirtableData = async ({ method, url, body }) => {
         Authorization: `Bearer ${API_TOKEN}`
     };
     
+    const fullUrl = `${AIRTABLE_URL}${url ?? ""}`;
+    
     let response;
     switch (method) {
         case "POST":
-            response = await axios.post(`${AIRTABLE_URL}${url ?? ""}`, body, { headers });
+            response = await axios.post(fullUrl, body, { headers });
             break;
         case "GET":
-            response = await axios.get(`${AIRTABLE_URL}${url ?? ""}`, { headers });
+            response = await axios.get(fullUrl, { headers });
             break;
         case "DELETE":
-            response = await axios.delete(`${AIRTABLE_URL}${url ?? ""}`, { headers });
+            response = await axios.delete(fullUrl, { headers });
             break;
         default:
             throw new Error("Invalid method type.");
