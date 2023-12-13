@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
 
@@ -12,24 +13,31 @@ const SORT_BY_LAST_MODIFIED_TIME = ""; //"?sort%5B0%5D%5Bfield%5D=lastModifiedTi
 const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
 
 const fetchAirtableData = async ({ method, url, body }) => {
-    const response = await fetch(`${AIRTABLE_URL}${url ?? ""}`, {
-        method,
-        headers: {
-            "Authorization": `Bearer ${API_TOKEN}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-    });
+    const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_TOKEN}`
+    };
     
-    if (!response.ok) {
-        return Promise.reject(`Error: ${response.status}`);
+    let response;
+    switch (method) {
+        case "GET":
+            response = await axios.get(`${AIRTABLE_URL}${url ?? ""}`, { headers });
+            break;
+        case "POST":
+            response = await axios.post(`${AIRTABLE_URL}${url ?? ""}`, body, { headers });
+            break;
+        case "DELETE":
+            response = await axios.delete(`${AIRTABLE_URL}${url ?? ""}`, { headers });
+            break;
+        default:
+            throw new Error("Invalid method type.");
     }
     
-    if (response.headers.get("Content-Type").includes("application/json")) {
-        return await response.json();
+    if (!response || response.status !== 200) {
+        throw new Error(`Error: ${response ? response.status : "Unknown"}`);
     }
     
-    return null;
+    return response.data;
 };
 
 const App = () => {
