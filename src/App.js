@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
@@ -95,17 +96,26 @@ const App = () => {
     };
     
     return (
-        <>
-            <h1>Todo List</h1>
-            <hr/>
-            <AddTodoForm onAddTodo={addTodo}/>
-            {isLoading ? (
-                <p>Loading...</p>
-            ) : (
-                <TodoList todoList={todoList} onRemoveTodo={removeTodo}/>
-            )}
-            <hr/>
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route path={"/"} element={
+                    <>
+                        <h1>Todo List</h1>
+                        <hr/>
+                        <AddTodoForm onAddTodo={addTodo}/>
+                        {isLoading ? (
+                            <p>Loading...</p>
+                        ) : (
+                            <TodoList todoList={todoList} onRemoveTodo={removeTodo}/>
+                        )}
+                        <hr/>
+                    </>
+                }/>
+                <Route path={"/new"} element={
+                    <h1>New Todo List</h1>
+                }/>
+            </Routes>
+        </BrowserRouter>
     );
 };
 
