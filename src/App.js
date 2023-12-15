@@ -19,29 +19,19 @@ const fetchAirtableData = async ({ method, url, body }) => {
         Authorization: `Bearer ${API_TOKEN}`
     };
     
-    let response;
-    switch (method) {
-        case "GET":
-            response = await axios.get(`${AIRTABLE_URL}${url ?? ""}`, { headers });
-            break;
-        case "POST":
-            response = await axios.post(`${AIRTABLE_URL}${url ?? ""}`, body, { headers });
-            break;
-        case "DELETE":
-            response = await axios.delete(`${AIRTABLE_URL}${url ?? ""}`, { headers });
-            break;
-        case "PATCH":
-            response = await axios.patch(`${AIRTABLE_URL}${url ?? ""}`, body, { headers });
-            break;
-        default:
-            throw new Error("Invalid method type.");
-    }
+    const axiosConfig = {
+        method: method,
+        url: `${AIRTABLE_URL}${url ?? ""}`,
+        headers: headers,
+        ...(body ? { data: body } : {}),
+    };
     
-    if (!response || response.status !== 200) {
-        throw new Error(`Error: ${response ? response.status : "Unknown"}`);
+    try {
+        const response = await axios(axiosConfig);
+        return response.data;
+    } catch (error) {
+        throw new Error(`Error: ${error.response ? error.response.status : "Unknown"}`);
     }
-    
-    return response.data;
 };
 
 const App = () => {
