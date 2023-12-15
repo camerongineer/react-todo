@@ -9,7 +9,7 @@ const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
 const TABLE_NAME = process.env.REACT_APP_TABLE_NAME;
 const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
 // Sorts todos by lastModifiedTime if this entry exists as field type
-const SORT_BY_LAST_MODIFIED_TIME = ""; //"?sort%5B0%5D%5Bfield%5D=lastModifiedTime&sort%5B0%5D%5Bdirection%5D=asc";
+const SORT_BY_LAST_MODIFIED_TIME = "?sort[0][field]=completed&sort[0][direction]=asc&sort[1][field]=lastModifiedTime&sort[1][direction]=asc";
 
 const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
 
@@ -30,6 +30,9 @@ const fetchAirtableData = async ({ method, url, body }) => {
         case "DELETE":
             response = await axios.delete(`${AIRTABLE_URL}${url ?? ""}`, { headers });
             break;
+        case "PATCH":
+            response = await axios.patch(`${AIRTABLE_URL}${url ?? ""}`, body, { headers });
+            break;
         default:
             throw new Error("Invalid method type.");
     }
@@ -48,7 +51,7 @@ const App = () => {
     const addTodo = async (newTodo) => {
         const airtableData = {
             fields: {
-                title: newTodo
+                title: newTodo,
             }
         };
         try {
@@ -80,19 +83,34 @@ const App = () => {
     const loadTodos = async () => {
         try {
             const response = await fetchAirtableData({ method: "GET", url: SORT_BY_LAST_MODIFIED_TIME });
-            
-            const todosFromAPI = await response;
-            
-            setTodoList(todosFromAPI.records.map(todo => {
+           
+            setTodoList(response.records.map(todo => {
                 return {
                     id: todo.id,
-                    title: todo.fields.title
+                    title: todo.fields.title,
+                    completed: todo.fields.completed ?? false
                 };
             }));
         } catch (error) {
             console.log(error.message);
             setTodoList([]);
         }
+    };
+    
+    const toggleCompleted = async (todoItem) => {
+        todoItem.completed = !todoItem.completed;
+        try {
+            const airtableData = {
+                fields: {
+                    title: todoItem.title,
+                    completed: todoItem.completed
+                }
+            };
+            await fetchAirtableData({ method: "PATCH", url: `/${todoItem.id}`, body: airtableData });
+        } catch (error) {
+            console.log(error.message);
+        }
+        await loadTodos();
     };
     
     return (
@@ -106,7 +124,7 @@ const App = () => {
                         {isLoading ? (
                             <p>Loading...</p>
                         ) : (
-                            <TodoList todoList={todoList} onRemoveTodo={removeTodo}/>
+                            <TodoList todoList={todoList} onCompleted={toggleCompleted} onRemoveTodo={removeTodo}/>
                         )}
                         <hr/>
                     </>
