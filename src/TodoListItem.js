@@ -5,7 +5,7 @@ const TodoListItem = ({ item, onCompleted, onRemoveClicked }) =>
         <div style={{ display: "flex", margin: "4px 20px 4px 0", justifyContent: "space-between" }}>
             <div>
                 <input type={"checkbox"} checked={item.completed} onChange={() => onCompleted(item)}/>
-                {item.title}
+                <span style={{ textDecoration: item.completed ? "line-through" : "none" }}>{item.title}</span>
             </div>
             <button onClick={() => onRemoveClicked(item.id)}>Remove</button>
         </div>
