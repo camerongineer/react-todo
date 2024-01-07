@@ -1,6 +1,7 @@
 .container {
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%
 }
 
@@ -14,6 +15,8 @@
 }
 
 .App {
+    display: flex;
+    flex-direction: column;
     width: clamp(280px, 100%, 720px);
 }
 

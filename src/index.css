@@ -29,3 +29,7 @@ input {
     padding: 5px;
     font-size: large;
 }
+
+a {
+    text-decoration: none;
+}

@@ -1,0 +1,49 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.loggedInfo {
+    margin-bottom: 10px;
+}
+
+.logoutButton {
+    border-radius: 5px;
+    margin: 0;
+    padding: 10px 1em;
+    background: #590d22;
+    aspect-ratio: auto;
+    color: #fff0f3;
+    font-weight: bold;
+}
+
+.githubButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.githubContainer {
+    align-self: center;
+    width: fit-content;
+    padding: 10px;
+    background: #590d22;
+    border: black 2px solid;
+    border-radius: 8px;
+    margin: 5vh;
+}
+
+.githubContainer a {
+    color: #fff0f3;
+    font-weight: bold;
+    gap: 5px;
+}
+
+.githubContainer:hover {
+    background: #800f2f;
+    cursor: pointer;
+}
