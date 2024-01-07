@@ -18,13 +18,16 @@ const InputWithLabel = ({
     
     return (
         <>
-            <label htmlFor={inputId}>{children}</label>
+            <label htmlFor={inputId}>
+                {children}
+            </label>
             &nbsp;
             <input ref={inputRef}
                    id={inputId}
                    type={type}
                    value={inputValue}
-                   onChange={onInputChange}/>
+                   onChange={onInputChange}
+            />
         </>
     );
 };
