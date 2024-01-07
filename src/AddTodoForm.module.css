@@ -1,0 +1,9 @@
+.AddTodoForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input {
+    width: clamp(150px, 30%, 300px);
+}

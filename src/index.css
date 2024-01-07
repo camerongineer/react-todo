@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Rubik&display=swap');
+
+* {
+    font-family: "Rubik", "Arial", serif;
+}
+
+body {
+    background-color: #fff0f3;
+    color: #590d22;
+    font-size: larger;
+}
+
+button {
+    padding: 7px 10px;
+    margin: 0 1em;
+    background-color: #ff8fa3;
+    cursor: pointer;
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+
+button:hover {
+    background-color: #ff4d6d;
+}
+
+input {
+    height: 2em;
+    border-radius: 15px;
+    padding: 5px;
+    font-size: large;
+}

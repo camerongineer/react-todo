@@ -1,0 +1,11 @@
+.ListItem {
+    font-weight: bold;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 4px 20px 4px 0;
+    font-size: xx-large;
+}

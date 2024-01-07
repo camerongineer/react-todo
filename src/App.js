@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import styles from "./App.module.css";
+import { ReactComponent as Notebook } from "./notebook.svg";
+import Loading from "./Loading";
 
 const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
@@ -23,7 +26,7 @@ const fetchAirtableData = async ({ method, url, body }) => {
         method: method,
         url: `${AIRTABLE_URL}${url ?? ""}`,
         headers: headers,
-        ...(body ? { data: body } : {}),
+        ...(body ? { data: body } : {})
     };
     
     try {
@@ -92,21 +95,34 @@ const App = () => {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={
-                    <>
-                        <h1>Todo List</h1>
-                        <hr/>
-                        <AddTodoForm onAddTodo={addTodo}/>
-                        {isLoading ? (
-                            <p>Loading...</p>
-                        ) : (
-                            <TodoList todoList={todoList} onRemoveTodo={removeTodo}/>
-                        )}
-                        <hr/>
-                    </>
+                    <div className={styles.container}>
+                        <div className={styles.App}>
+                            <div className={styles.Logo}>
+                                <h1>Todo</h1>
+                                <Notebook
+                                    width="50px"
+                                    height="50px"
+                                />
+                                <h1>List</h1>
+                            </div>
+                            <AddTodoForm onAddTodo={addTodo}/>
+                            {isLoading ? (
+                                <Loading/>
+                            ) : (
+                                <TodoList
+                                    todoList={todoList}
+                                    onRemoveTodo={removeTodo}
+                                />
+                            )}
+                        </div>
+                    </div>
                 }/>
-                <Route path="/new" element={
-                    <h1>New Todo List</h1>
-                }/>
+                <Route
+                    path="/new"
+                    element={
+                        <h1>New Todo List</h1>
+                    }
+                />
             </Routes>
         </BrowserRouter>
     );
