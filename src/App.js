@@ -143,17 +143,6 @@ const App = () => {
                         </div>
                     </div>
                 }/>
-                <Route
-                    path="/new"
-                    element={
-                        <h1>New Todo List</h1>
-                    }
-                />
-                <Route
-                    path={"/login"}
-                    element={<Login/>}
-                />
-            
             </Routes>
         </BrowserRouter>
     );
