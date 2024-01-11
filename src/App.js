@@ -99,10 +99,7 @@ const App = () => {
                         <div className={styles.App}>
                             <div className={styles.Logo}>
                                 <h1>Todo</h1>
-                                <Notebook
-                                    width="50px"
-                                    height="50px"
-                                />
+                                <Notebook/>
                                 <h1>List</h1>
                             </div>
                             <AddTodoForm onAddTodo={addTodo}/>
