@@ -36,10 +36,7 @@ const AddTodoForm = ({ onAddTodo }) => {
                     inputId={TITLE_ID}
                 />
                 <button type="submit">
-                    <Add
-                        width="20px"
-                        height="20px"
-                    />
+                    <Add/>
                 </button>
             </div>
         </form>

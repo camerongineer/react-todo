@@ -119,14 +119,8 @@ const App = () => {
                 <Route path="/" element={
                     <div className={styles.container}>
                         <div className={styles.App}>
-                            <div className={styles.Logo}>
-                                <h1>Todo</h1>
-                                <Notebook
-                                    width="50px"
-                                    height="50px"
-                                />
-                                <h1>List</h1>
-                            </div>
+                            <h1 className={styles.Logo}>Todo<Notebook/>List</h1>
+                            <AddTodoForm onAddTodo={addTodo}/>
                             <Login userInfo={userInfo}/>
                             {isLoading ? (
                                 <Loading/>
