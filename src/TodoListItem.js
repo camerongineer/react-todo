@@ -6,7 +6,10 @@ const TodoListItem = ({ item, onRemoveClicked }) =>
     <li className={styles.ListItem}>
         <div className={styles.row}>
             {item.title}
-            <button onClick={() => onRemoveClicked(item.id)}>
+            <button
+                type="button"
+                onClick={() => onRemoveClicked(item.id)}
+            >
                 <Remove/>
             </button>
         </div>
