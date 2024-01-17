@@ -1,10 +1,17 @@
 import React from "react";
+import styles from "./TodoListItem.module.css";
+import { ReactComponent as Remove } from "./delete.svg";
 
 const TodoListItem = ({ item, onRemoveClicked }) =>
-    <li>
-        <div style={{ display: "flex", margin: "4px 20px 4px 0", justifyContent: "space-between" }}>
+    <li className={styles.ListItem}>
+        <div className={styles.row}>
             {item.title}
-            <button onClick={() => onRemoveClicked(item.id)}>Remove</button>
+            <button
+                type="button"
+                onClick={() => onRemoveClicked(item.id)}
+            >
+                <Remove/>
+            </button>
         </div>
     </li>;
 

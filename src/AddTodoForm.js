@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import InputWithLabel from "./InputWithLabel";
+import { ReactComponent as Add } from "./add.svg";
+import styles from "./AddTodoForm.module.css";
 
 const INITIAL_TITLE_VALUE = "";
 const TITLE_ID = "todoTitle";
@@ -26,13 +28,17 @@ const AddTodoForm = ({ onAddTodo }) => {
     
     return (
         <form onSubmit={handleAddTodo}>
-            <InputWithLabel inputValue={todoTitle}
-                            onInputChange={handleTitleChange}
-                            isFocused
-                            inputId={TITLE_ID}>
-                <strong>Title:</strong>
-            </InputWithLabel>
-            <button type="submit">Add</button>
+            <div className={styles.AddTodoForm}>
+                <InputWithLabel
+                    inputValue={todoTitle}
+                    onInputChange={handleTitleChange}
+                    isFocused
+                    inputId={TITLE_ID}
+                />
+                <button type="submit">
+                    <Add/>
+                </button>
+            </div>
         </form>
     );
 };
