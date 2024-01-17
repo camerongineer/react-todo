@@ -120,7 +120,6 @@ const App = () => {
                     <div className={styles.container}>
                         <div className={styles.App}>
                             <h1 className={styles.Logo}>Todo<Notebook/>List</h1>
-                            <AddTodoForm onAddTodo={addTodo}/>
                             <Login userInfo={userInfo}/>
                             {isLoading ? (
                                 <Loading/>
