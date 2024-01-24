@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputWithLabel from "./InputWithLabel";
 import { ReactComponent as Add } from "./add.svg";
 import styles from "./AddTodoForm.module.css";
+import TodoItemCount from "./TodoItemCount";
 
 const INITIAL_TITLE_VALUE = "";
 const TITLE_ID = "todoTitle";
@@ -29,6 +30,7 @@ const AddTodoForm = ({ onAddTodo }) => {
     return (
         <form onSubmit={handleAddTodo}>
             <div className={styles.AddTodoForm}>
+                <TodoItemCount/>
                 <InputWithLabel
                     inputValue={todoTitle}
                     onInputChange={handleTitleChange}

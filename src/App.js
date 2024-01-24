@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import TodoList from "./TodoList";
@@ -6,6 +6,7 @@ import AddTodoForm from "./AddTodoForm";
 import styles from "./App.module.css";
 import { ReactComponent as Notebook } from "./notebook.svg";
 import Loading from "./Loading";
+import { TodoContext } from "./TodoContext";
 
 const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
@@ -40,6 +41,7 @@ const fetchAirtableData = async ({ method, url, body }) => {
 const App = () => {
     const [todoList, setTodoList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const { setCount } = useContext(TodoContext);
     
     const addTodo = async (newTodo) => {
         const airtableData = {
@@ -78,7 +80,7 @@ const App = () => {
             const response = await fetchAirtableData({ method: "GET", url: SORT_BY_LAST_MODIFIED_TIME });
             
             const todosFromAPI = await response;
-            
+            setCount(todosFromAPI.records.length);
             setTodoList(todosFromAPI.records.map(todo => {
                 return {
                     id: todo.id,

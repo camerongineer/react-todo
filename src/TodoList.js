@@ -1,5 +1,6 @@
 import React from "react";
 import TodoListItem from "./TodoListItem";
+import TodoItemCount from "./TodoItemCount";
 
 const TodoList = ({ todoList, onRemoveTodo }) => (
     <ul>{todoList.map(listItem =>
@@ -8,6 +9,7 @@ const TodoList = ({ todoList, onRemoveTodo }) => (
             item={listItem}
             onRemoveClicked={onRemoveTodo}
         />)}
+        <TodoItemCount/>
     </ul>);
 
 export default TodoList;
