@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InputWithLabel from "./InputWithLabel";
-import { ReactComponent as Add } from "../add.svg";
-import styles from "../AddTodoForm.module.css";
+import { ReactComponent as Add } from "../assets/add.svg";
+import styles from "../styles/AddTodoForm.module.css";
 import PropTypes from "prop-types";
 
 const INITIAL_TITLE_VALUE = "";

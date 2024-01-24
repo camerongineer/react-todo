@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import TodoList from "./components/TodoList";
 import AddTodoForm from "./components/AddTodoForm";
-import styles from "./App.module.css";
-import { ReactComponent as Notebook } from "./notebook.svg";
-import Loading from "./Loading";
+import styles from "./styles/App.module.css";
+import { ReactComponent as Notebook } from "./assets/notebook.svg";
+import Loading from "./components/Loading";
 
 const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
