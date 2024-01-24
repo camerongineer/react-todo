@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "./TodoListItem.module.css";
-import { ReactComponent as Remove } from "./delete.svg";
+import styles from "../TodoListItem.module.css";
+import { ReactComponent as Remove } from "../delete.svg";
 
 const TodoListItem = ({ item, onRemoveClicked }) =>
     <li className={styles.ListItem}>
