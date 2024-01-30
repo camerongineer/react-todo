@@ -1,0 +1,11 @@
+.Logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: .25em;
+}
+
+.App {
+    width: clamp(280px, 100%, 720px);
+}
