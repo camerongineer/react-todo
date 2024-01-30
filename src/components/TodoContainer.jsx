@@ -7,6 +7,8 @@ import TodoList from "./TodoList";
 import { sortByField } from "../utils";
 import SortBox from "./SortBox";
 
+const LOCAL_STORAGE_SORT_KEY = "todoListSort";
+
 const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
 const TABLE_NAME = process.env.REACT_APP_TABLE_NAME;
@@ -38,11 +40,13 @@ const fetchAirtableData = async ({ method, url, body }) => {
     }
 };
 
+const savedSortOptions = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
+
 const TodoContainer = () => {
     const [todoList, setTodoList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [sortBy, setSortBy] = useState("lastModifiedTime");
-    const [isReversed, setIsReversed] = useState(true);
+    const [sortBy, setSortBy] = useState(savedSortOptions.sortBy ?? "lastModifiedTime");
+    const [isReversed, setIsReversed] = useState(savedSortOptions.isReversed ?? true);
     
     const addTodo = async (newTodo) => {
         const airtableData = {
@@ -103,8 +107,21 @@ const TodoContainer = () => {
         setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
     }, [isReversed, sortBy]);
     
-    const handleIsReversedChange = () => setIsReversed(!isReversed);
-    const handleSortFieldChange = (event) => setSortBy(event.target.value);
+    const handleIsReversedChange = () => {
+        setIsReversed(prevState => {
+            const prevLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
+            localStorage.setItem(LOCAL_STORAGE_SORT_KEY,
+                JSON.stringify({ ...prevLocalStorage, "isReversed": !prevState }));
+            return !prevState;
+        });
+    };
+    
+    const handleSortFieldChange = (event) => {
+        const newSortBy = event.target.value;
+        const prevLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
+        localStorage.setItem(LOCAL_STORAGE_SORT_KEY, JSON.stringify({ ...prevLocalStorage, "sortBy": newSortBy }));
+        setSortBy(newSortBy);
+    };
     
     return (
         <div className={styles.container}>
@@ -119,7 +136,7 @@ const TodoContainer = () => {
                             onIsReversedChange={handleIsReversedChange}
                             onSortFieldChange={handleSortFieldChange}
                             sortField={sortBy}
-                         />
+                        />
                         <TodoList
                             todoList={todoList}
                             onRemoveTodo={removeTodo}
