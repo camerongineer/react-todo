@@ -1,0 +1,24 @@
+.Container {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    gap: .25em;
+    margin-top: 2em;
+    padding-bottom: .5em;
+    user-select: none;
+}
+
+.Ascending {
+    transform: rotate(180deg);
+}
+
+.Ascending,
+.Descending {
+    fill: #ff8fa3;
+}
+
+.Ascending:hover,
+.Descending:hover {
+    fill: #ff4d6d;
+}
