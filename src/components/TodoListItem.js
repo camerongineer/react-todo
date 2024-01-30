@@ -17,7 +17,10 @@ const TodoListItem = ({ item, onRemoveClicked }) =>
     </li>;
 
 TodoListItem.propTypes = {
-    item: PropTypes.object.isRequired,
+    item: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+    }).isRequired,
     onRemoveClicked: PropTypes.func.isRequired
 };
 
