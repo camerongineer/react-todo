@@ -6,7 +6,7 @@ import {Outlet} from "react-router-dom";
 const Layout = () => {
     return (
         <div>
-            <h1 className={styles.Logo}>Todo<Notebook/>List</h1>
+            <h1 className={styles.Logo}>Todo<Notebook className={styles.Icon}/>List</h1>
             <Outlet/>
         </div>
     );
