@@ -22,14 +22,14 @@ const fetchAirtableData = async ({ method, url, body }) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${API_TOKEN}`
     };
-    
+
     const axiosConfig = {
         method: method,
         url: `${AIRTABLE_URL}${url ?? ""}`,
         headers: headers,
         ...(body ? { data: body } : {})
     };
-    
+
     try {
         const response = await axios(axiosConfig);
         return response.data;
@@ -45,7 +45,7 @@ const TodoContainer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [sortBy, setSortBy] = useState(savedSortOptions.sortBy ?? "lastModifiedTime");
     const [isReversed, setIsReversed] = useState(savedSortOptions.isReversed ?? true);
-    
+
     const addTodo = async (newTodo) => {
         const airtableData = {
             fields: {
@@ -59,7 +59,7 @@ const TodoContainer = () => {
         }
         await loadTodos();
     };
-    
+
     const removeTodo = async (id) => {
         try {
             await fetchAirtableData({ method: "DELETE", url: `/${id}` });
@@ -68,31 +68,26 @@ const TodoContainer = () => {
         }
         await loadTodos();
     };
-    
+
     const loadTodos = async () => {
         try {
             const response = await fetchAirtableData({ method: "GET", url: `?${GRID_VIEW}` });
-            
+
             const todosFromAPI = await response;
-            
-            setTodoList(
-                sortByField(
-                    todosFromAPI.records.map(todo => {
-                        return {
-                            id: todo.id,
-                            title: todo.fields.title,
-                            lastModifiedTime: todo.fields.lastModifiedTime
-                        };
-                    }),
-                    sortBy,
-                    isReversed
-                ));
+
+            setTodoList(todosFromAPI.records.map(todo => {
+                return {
+                    id: todo.id,
+                    title: todo.fields.title,
+                    lastModifiedTime: todo.fields.lastModifiedTime
+                };
+            }));
         } catch (error) {
             console.log(error.message);
             setTodoList([]);
         }
     };
-    
+
     useEffect(() => {
         (async () => {
             setIsLoading(true);
@@ -100,11 +95,11 @@ const TodoContainer = () => {
             setIsLoading(false);
         })();
     }, []);
-    
+
     useEffect(() => {
         setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
     }, [isReversed, sortBy]);
-    
+
     const handleIsReversedChange = () => {
         setIsReversed(prevState => {
             const prevLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
@@ -113,14 +108,14 @@ const TodoContainer = () => {
             return !prevState;
         });
     };
-    
+
     const handleSortFieldChange = (event) => {
         const newSortBy = event.target.value;
         const prevLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
         localStorage.setItem(LOCAL_STORAGE_SORT_KEY, JSON.stringify({ ...prevLocalStorage, "sortBy": newSortBy }));
         setSortBy(newSortBy);
     };
-    
+
     return (
         <div className={styles.container}>
             <div className={styles.App}>
