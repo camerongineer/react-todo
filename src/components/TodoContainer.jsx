@@ -39,12 +39,14 @@ const fetchAirtableData = async ({ method, url, body }) => {
 };
 
 const savedSortOptions = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
+const initialSort = savedSortOptions.sortBy ?? "lastModifiedTime";
+const initialIsReversed = savedSortOptions.isReversed ?? true;
 
 const TodoContainer = () => {
     const [todoList, setTodoList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [sortBy, setSortBy] = useState(savedSortOptions.sortBy ?? "lastModifiedTime");
-    const [isReversed, setIsReversed] = useState(savedSortOptions.isReversed ?? true);
+    const [sortBy, setSortBy] = useState(initialSort);
+    const [isReversed, setIsReversed] = useState(initialIsReversed);
 
     const addTodo = async (newTodo) => {
         const airtableData = {
@@ -75,13 +77,18 @@ const TodoContainer = () => {
 
             const todosFromAPI = await response;
 
-            setTodoList(todosFromAPI.records.map(todo => {
-                return {
-                    id: todo.id,
-                    title: todo.fields.title,
-                    lastModifiedTime: todo.fields.lastModifiedTime
-                };
-            }));
+            setTodoList(
+                sortByField(
+                    todosFromAPI.records.map(todo => {
+                        return {
+                            id: todo.id,
+                            title: todo.fields.title,
+                            lastModifiedTime: todo.fields.lastModifiedTime
+                        };
+                    }),
+                        initialSort,
+                        initialIsReversed
+                ));
         } catch (error) {
             console.log(error.message);
             setTodoList([]);
