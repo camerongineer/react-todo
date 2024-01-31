@@ -9,6 +9,7 @@ const TodoListItem = ({ item, onRemoveClicked }) =>
             {item.title}
             <button
                 type="button"
+                data-testid="remove-button"
                 onClick={() => onRemoveClicked(item.id)}
             >
                 <Remove/>
