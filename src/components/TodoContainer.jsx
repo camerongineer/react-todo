@@ -14,8 +14,6 @@ const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
 const TABLE_NAME = process.env.REACT_APP_TABLE_NAME;
 const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
 const GRID_VIEW = "view=Grid view";
-const SORT_BY_TITLE = "sort[0][field]=title&sort[0][direction]=asc";
-const SORT_BY_LAST_MODIFIED_TIME = "sort[0][field]=lastModifiedTime&sort[0][direction]=asc";
 
 const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
 
