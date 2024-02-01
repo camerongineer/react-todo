@@ -3,7 +3,7 @@ import { sortByField } from "../utils";
 
 describe("sortByField", () => {
     const mockArray = [
-        { id: 2, title: "Task B", createDateTime: "2023-11-01T08:45:00Z" },
+        { id: 2, title: "task B", createDateTime: "2023-11-01T08:45:00Z" },
         { id: 1, title: "Task A", createDateTime: "2023-12-01T10:30:00Z" },
         { id: 3, title: "Task C", createDateTime: "2023-11-15T15:20:00Z" }
     ];
@@ -12,7 +12,7 @@ describe("sortByField", () => {
         const sortedArray = sortByField(mockArray, "title");
         expect(sortedArray).toEqual([
             { id: 1, title: "Task A", createDateTime: "2023-12-01T10:30:00Z" },
-            { id: 2, title: "Task B", createDateTime: "2023-11-01T08:45:00Z" },
+            { id: 2, title: "task B", createDateTime: "2023-11-01T08:45:00Z" },
             { id: 3, title: "Task C", createDateTime: "2023-11-15T15:20:00Z" }
         ]);
     });
@@ -21,7 +21,7 @@ describe("sortByField", () => {
         const sortedArray = sortByField(mockArray, "title", true);
         expect(sortedArray).toEqual([
             { id: 3, title: "Task C", createDateTime: "2023-11-15T15:20:00Z" },
-            { id: 2, title: "Task B", createDateTime: "2023-11-01T08:45:00Z" },
+            { id: 2, title: "task B", createDateTime: "2023-11-01T08:45:00Z" },
             { id: 1, title: "Task A", createDateTime: "2023-12-01T10:30:00Z" }
         ]);
     });
@@ -29,7 +29,7 @@ describe("sortByField", () => {
     test("sorts array by 'createDateTime' in ascending order", () => {
         const sortedArray = sortByField(mockArray, "createDateTime");
         expect(sortedArray).toEqual([
-            { id: 2, title: "Task B", createDateTime: "2023-11-01T08:45:00Z" },
+            { id: 2, title: "task B", createDateTime: "2023-11-01T08:45:00Z" },
             { id: 3, title: "Task C", createDateTime: "2023-11-15T15:20:00Z" },
             { id: 1, title: "Task A", createDateTime: "2023-12-01T10:30:00Z" }
         ]);
@@ -40,7 +40,7 @@ describe("sortByField", () => {
         expect(sortedArray).toEqual([
             { id: 1, title: "Task A", createDateTime: "2023-12-01T10:30:00Z" },
             { id: 3, title: "Task C", createDateTime: "2023-11-15T15:20:00Z" },
-            { id: 2, title: "Task B", createDateTime: "2023-11-01T08:45:00Z" }
+            { id: 2, title: "task B", createDateTime: "2023-11-01T08:45:00Z" }
         ]);
     });
 });
