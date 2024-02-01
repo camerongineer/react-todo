@@ -11,7 +11,7 @@ const LOCAL_STORAGE_SORT_KEY = "todoListSort";
 const GRID_VIEW = "view=Grid view";
 
 const savedSortOptions = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
-const initialSort = savedSortOptions.sortBy ?? "lastModifiedTime";
+const initialSort = savedSortOptions.sortBy ?? "createDateTime";
 const initialIsReversed = savedSortOptions.isReversed ?? true;
 
 const TodoContainer = ({ tableName }) => {
