@@ -24,7 +24,7 @@ const TodoContainer = ({ tableName }) => {
         const airtableData = {
             fields: {
                 title: newTodo,
-                createDate: new Date().toISOString()
+                createDateTime: new Date().toISOString()
             }
         };
         try {
@@ -56,8 +56,8 @@ const TodoContainer = ({ tableName }) => {
                         return {
                             id: todo.id,
                             title: todo.fields.title,
-                            createDate: todo.fields.createDate,
-                            completeDate: todo.fields.completeDate
+                            createDateTime: todo.fields.createDateTime,
+                            completeDateTime: todo.fields.completeDateTime
                         };
                     }),
                         initialSort,
