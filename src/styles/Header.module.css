@@ -1,0 +1,12 @@
+.Logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: .25em;
+    user-select: none;
+}
+
+.Icon path {
+    fill: #590d22;
+}
