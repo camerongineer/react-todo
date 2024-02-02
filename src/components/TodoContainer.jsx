@@ -1,53 +1,26 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import styles from "../styles/TodoContainer.module.css";
 import AddTodoForm from "./AddTodoForm";
 import Loading from "./Loading";
 import TodoList from "./TodoList";
-import { sortByField } from "../utils";
+import { sortByField } from "../utils/sortByField";
 import SortBox from "./SortBox";
+import { fetchAirtableData } from "../utils/fetchAirtableData";
 
-const LOCAL_STORAGE_SORT_KEY = "todoListSort";
-
-const BASE_URL = "https://api.airtable.com/v0";
-const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
-const TABLE_NAME = process.env.REACT_APP_TABLE_NAME;
-const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
 const GRID_VIEW = "view=Grid view";
 
-const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
+const LOCAL_STORAGE_REVERSED_KEY = "todoListIsReversed";
+const LOCAL_STORAGE_SORT_BY_KEY = "todoListSortBy";
 
-const fetchAirtableData = async ({ method, url, body }) => {
-    const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_TOKEN}`
-    };
-
-    const axiosConfig = {
-        method: method,
-        url: `${AIRTABLE_URL}${url ?? ""}`,
-        headers: headers,
-        ...(body ? { data: body } : {})
-    };
-
-    try {
-        const response = await axios(axiosConfig);
-        return response.data;
-    } catch (error) {
-        throw new Error(`Error: ${error.response ? error.response.status : "Unknown"}`);
-    }
-};
-
-const savedSortOptions = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
-const initialSort = savedSortOptions.sortBy ?? "lastModifiedTime";
-const initialIsReversed = savedSortOptions.isReversed ?? true;
+const initialSort = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY) ?? "lastModifiedTime";
+const initialIsReversed = JSON.parse(localStorage.getItem(LOCAL_STORAGE_REVERSED_KEY)) ?? true;
 
 const TodoContainer = () => {
     const [todoList, setTodoList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [sortBy, setSortBy] = useState(initialSort);
     const [isReversed, setIsReversed] = useState(initialIsReversed);
-
+    
     const addTodo = async (newTodo) => {
         const airtableData = {
             fields: {
@@ -61,7 +34,7 @@ const TodoContainer = () => {
         }
         await loadTodos();
     };
-
+    
     const removeTodo = async (id) => {
         try {
             await fetchAirtableData({ method: "DELETE", url: `/${id}` });
@@ -70,13 +43,13 @@ const TodoContainer = () => {
         }
         await loadTodos();
     };
-
+    
     const loadTodos = async () => {
         try {
             const response = await fetchAirtableData({ method: "GET", url: `?${GRID_VIEW}` });
-
+            
             const todosFromAPI = await response;
-
+            
             setTodoList(
                 sortByField(
                     todosFromAPI.records.map(todo => {
@@ -86,15 +59,15 @@ const TodoContainer = () => {
                             lastModifiedTime: todo.fields.lastModifiedTime
                         };
                     }),
-                        initialSort,
-                        initialIsReversed
+                    initialSort,
+                    initialIsReversed
                 ));
         } catch (error) {
             console.log(error.message);
             setTodoList([]);
         }
     };
-
+    
     useEffect(() => {
         (async () => {
             setIsLoading(true);
@@ -102,27 +75,20 @@ const TodoContainer = () => {
             setIsLoading(false);
         })();
     }, []);
-
+    
     useEffect(() => {
         setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
+        localStorage.setItem(LOCAL_STORAGE_REVERSED_KEY, isReversed);
+        localStorage.setItem(LOCAL_STORAGE_SORT_BY_KEY, sortBy);
     }, [isReversed, sortBy]);
-
-    const handleIsReversedChange = () => {
-        setIsReversed(prevState => {
-            const prevLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
-            localStorage.setItem(LOCAL_STORAGE_SORT_KEY,
-                JSON.stringify({ ...prevLocalStorage, "isReversed": !prevState }));
-            return !prevState;
-        });
-    };
-
+    
+    const handleIsReversedChange = () => setIsReversed(prevState => !prevState);
+    
     const handleSortFieldChange = (event) => {
         const newSortBy = event.target.value;
-        const prevLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
-        localStorage.setItem(LOCAL_STORAGE_SORT_KEY, JSON.stringify({ ...prevLocalStorage, "sortBy": newSortBy }));
         setSortBy(newSortBy);
     };
-
+    
     return (
         <div className={styles.container}>
             <div className={styles.App}>
