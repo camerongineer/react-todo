@@ -58,7 +58,7 @@ const TodoContainer = () => {
     };
     
     useEffect(() => {
-        (async () => {
+        const loadTodo = async () => {
             try {
                 const todosRes = await fetchAirtableData({ method: "GET", url: `?${GRID_VIEW}` });
                 const todos = todosRes.records.map(todo => {
@@ -75,7 +75,8 @@ const TodoContainer = () => {
                 setTodoList([]);
             }
             setIsLoading(false);
-        })();
+        };
+        loadTodo();
     }, []);
     
     useEffect(() => {
