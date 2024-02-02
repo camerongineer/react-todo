@@ -29,14 +29,18 @@ const TodoContainer = () => {
         };
         try {
             const newTodoRes = await fetchAirtableData({ method: "POST", body: airtableData });
-            setTodoList((prevTodoList) => [
-                ...prevTodoList,
-                {
-                    id: newTodoRes.id,
-                    lastModifiedTime: newTodoRes.fields.lastModifiedTime,
-                    title: newTodoRes.fields.title
+            setTodoList(prevTodoList => {
+                    const newList = [
+                        ...prevTodoList,
+                        {
+                            id: newTodoRes.id,
+                            lastModifiedTime: newTodoRes.fields.lastModifiedTime,
+                            title: newTodoRes.fields.title
+                        }
+                    ];
+                    return sortByField(newList, sortBy, isReversed);
                 }
-            ]);
+            );
         } catch (error) {
             console.log(error.message);
         }
