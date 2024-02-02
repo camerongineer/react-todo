@@ -74,9 +74,9 @@ const TodoContainer = () => {
                 console.log(error.message);
                 setTodoList([]);
             }
-            setIsLoading(false);
         };
         loadTodo();
+        setIsLoading(false);
     }, []);
     
     useEffect(() => {
