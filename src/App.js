@@ -1,27 +1,37 @@
 import {
     createBrowserRouter,
-    createRoutesFromElements,
+    createRoutesFromElements, redirect,
     Route,
     RouterProvider
 } from "react-router-dom";
-import TodoContainer from "./components/TodoContainer";
 import Layout from "./components/Layout";
+import CreateContainer from "./components/CreateContainer";
+import Home from "./components/Home";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { getTableNames } from "./api/airtable";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route
             path="/"
+            loader={getTableNames}
             element={<Layout/>}
+            errorElement={<ErrorBoundary/>}
         >
             <Route
                 index
-                element={<TodoContainer/>}
+                loader={() => {
+                    const recentList = localStorage.getItem("todoListRecent") ?? "Todo";
+                    throw redirect(`/list/${recentList}`);
+                }}
             />
             <Route
-                path="new"
-                element={
-                    <h1>New Todo List</h1>
-                }
+                path="list/:tableName"
+                element={<Home/>}
+            />
+            <Route
+                path="create-list"
+                element={<CreateContainer/>}
             />
         </Route>
     )
