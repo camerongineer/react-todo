@@ -28,50 +28,48 @@ const TodoContainer = () => {
             }
         };
         try {
-            await fetchAirtableData({ method: "POST", body: airtableData });
+            const newTodoRes = await fetchAirtableData({ method: "POST", body: airtableData });
+            setTodoList((prevTodoList) => [
+                ...prevTodoList,
+                {
+                    id: newTodoRes.id,
+                    lastModifiedTime: newTodoRes.fields.lastModifiedTime,
+                    title: newTodoRes.fields.title
+                }
+            ]);
         } catch (error) {
             console.log(error.message);
         }
-        await loadTodos();
     };
     
     const removeTodo = async (id) => {
         try {
-            await fetchAirtableData({ method: "DELETE", url: `/${id}` });
+            const removedTodoRes = await fetchAirtableData({ method: "DELETE", url: `/${id}` });
+            if (removedTodoRes.deleted) {
+                setTodoList(prevState => prevState.filter(todo => id !== todo.id));
+            }
         } catch (error) {
             console.log(error.message);
-        }
-        await loadTodos();
-    };
-    
-    const loadTodos = async () => {
-        try {
-            const response = await fetchAirtableData({ method: "GET", url: `?${GRID_VIEW}` });
-            
-            const todosFromAPI = await response;
-            
-            setTodoList(
-                sortByField(
-                    todosFromAPI.records.map(todo => {
-                        return {
-                            id: todo.id,
-                            title: todo.fields.title,
-                            lastModifiedTime: todo.fields.lastModifiedTime
-                        };
-                    }),
-                    initialSort,
-                    initialIsReversed
-                ));
-        } catch (error) {
-            console.log(error.message);
-            setTodoList([]);
         }
     };
     
     useEffect(() => {
         (async () => {
-            setIsLoading(true);
-            await loadTodos();
+            try {
+                const todosRes = await fetchAirtableData({ method: "GET", url: `?${GRID_VIEW}` });
+                const todos = todosRes.records.map(todo => {
+                    return {
+                        id: todo.id,
+                        title: todo.fields.title,
+                        lastModifiedTime: todo.fields.lastModifiedTime
+                    };
+                });
+                const sortedTodos = sortByField(todos, initialSort, initialIsReversed);
+                setTodoList(sortedTodos);
+            } catch (error) {
+                console.log(error.message);
+                setTodoList([]);
+            }
             setIsLoading(false);
         })();
     }, []);
