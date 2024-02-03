@@ -3,18 +3,18 @@ import styles from "../styles/TodoContainer.module.css";
 import AddTodoForm from "./AddTodoForm";
 import Loading from "./Loading";
 import TodoList from "./TodoList";
-import { sortByField } from "../utils";
+import { sortByField } from "../utils/sortByField";
 import SortBox from "./SortBox";
-import { fetchAirtableData } from "../api/airtable";
 import { useNavigate } from "react-router-dom";
+import { fetchAirtableData } from "../utils/fetchAirtableData";
 
-const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
-const LOCAL_STORAGE_SORT_KEY = "todoListSort";
 const GRID_VIEW = "view=Grid view";
 
-const savedSortOptions = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
-const initialSort = savedSortOptions.sortBy ?? "createDateTime";
-const initialIsReversed = savedSortOptions.isReversed ?? true;
+const LOCAL_STORAGE_REVERSED_KEY = "todoListIsReversed";
+const LOCAL_STORAGE_SORT_BY_KEY = "todoListSortBy";
+
+const initialSort = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY) ?? "lastModifiedTime";
+const initialIsReversed = JSON.parse(localStorage.getItem(LOCAL_STORAGE_REVERSED_KEY)) ?? true;
 
 const TodoContainer = ({ tableName }) => {
     const [todoList, setTodoList] = useState([]);
@@ -31,86 +31,78 @@ const TodoContainer = ({ tableName }) => {
             }
         };
         try {
-            await fetchAirtableData({ method: "POST", body: airtableData, url: `${BASE_ID}/${tableName}` });
+            const newTodoRes = await fetchAirtableData({ method: "POST", body: airtableData });
+            setTodoList(prevTodoList => {
+                    const newList = [
+                        ...prevTodoList,
+                        {
+                            id: newTodoRes.id,
+                            lastModifiedTime: newTodoRes.fields.lastModifiedTime,
+                            title: newTodoRes.fields.title
+                        }
+                    ];
+                    return sortByField(newList, sortBy, isReversed);
+                }
+            );
         } catch (error) {
             console.log(error.message);
         }
-        await loadTodos();
     };
     
     const removeTodo = async (id) => {
         try {
-            await fetchAirtableData({ method: "DELETE", url: `${BASE_ID}/${tableName}/${id}` });
-        } catch (error) {
-            console.log(error.message);
-        }
-        await loadTodos();
-    };
-    
-    const loadTodos = async () => {
-        try {
-            const response = await fetchAirtableData({ method: "GET", url: `${BASE_ID}/${tableName}?${GRID_VIEW}` });
-            
-            const todosFromAPI = await response;
-            
-            setTodoList(
-                sortByField(
-                    todosFromAPI.records.map(todo => {
-                        return {
-                            id: todo.id,
-                            title: todo.fields.title,
-                            createDateTime: todo.fields.createDateTime,
-                            completeDateTime: todo.fields.completeDateTime
-                        };
-                    }),
-                    initialSort,
-                    initialIsReversed
-                ));
-            localStorage.setItem("todoListRecent", tableName)
-        } catch (error) {
-            console.log(error.message);
-            if (error.response.status === 403) {
-                return navigate(`../create-list?t=${tableName}`)
+            const removedTodoRes = await fetchAirtableData({ method: "DELETE", url: `/${id}` });
+            if (removedTodoRes.deleted) {
+                setTodoList(prevState => prevState.filter(todo => removedTodoRes.id !== todo.id));
             }
+        } catch (error) {
+            console.log(error.message);
         }
     };
     
     useEffect(() => {
-        (async () => {
-            setIsLoading(true);
-            await loadTodos();
-            setIsLoading(false);
-        })();
-    }, [tableName]);
+        const loadTodo = async () => {
+            try {
+                const todosRes = await fetchAirtableData({ method: "GET", url: `?${GRID_VIEW}` });
+                const todos = todosRes.records.map(todo => {
+                    return {
+                        id: todo.id,
+                        title: todo.fields.title,
+                        lastModifiedTime: todo.fields.lastModifiedTime
+                    };
+                });
+                const sortedTodos = sortByField(todos, initialSort, initialIsReversed);
+                setTodoList(sortedTodos);
+            } catch (error) {
+                console.log(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadTodo();
+    }, []);
     
     useEffect(() => {
         setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
+        localStorage.setItem(LOCAL_STORAGE_REVERSED_KEY, isReversed);
+        localStorage.setItem(LOCAL_STORAGE_SORT_BY_KEY, sortBy);
     }, [isReversed, sortBy]);
     
-    const handleIsReversedChange = () => {
-        setIsReversed(prevState => {
-            const prevLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
-            localStorage.setItem(LOCAL_STORAGE_SORT_KEY,
-                JSON.stringify({ ...prevLocalStorage, "isReversed": !prevState }));
-            return !prevState;
-        });
-    };
+    const handleIsReversedChange = () => setIsReversed(prevState => !prevState);
     
     const handleSortFieldChange = (event) => {
         const newSortBy = event.target.value;
-        const prevLocalStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SORT_KEY)) ?? {};
-        localStorage.setItem(LOCAL_STORAGE_SORT_KEY, JSON.stringify({ ...prevLocalStorage, "sortBy": newSortBy }));
         setSortBy(newSortBy);
     };
-    
+
     return (
         <div className={styles.container}>
             <div className={styles.App}>
+                <AddTodoForm onAddTodo={addTodo}/>
                 {isLoading ? (
                     <Loading/>
                 ) : (
                     <>
-                        <AddTodoForm onAddTodo={addTodo}/>
                         <SortBox
                             isReversed={isReversed}
                             onIsReversedChange={handleIsReversedChange}

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
-import { sortByField } from "../utils";
+import { sortByField } from "../utils/sortByField";
+
 
 describe("sortByField", () => {
     const mockArray = [
