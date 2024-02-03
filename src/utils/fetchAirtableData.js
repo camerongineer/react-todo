@@ -2,9 +2,8 @@ import axios from "axios";
 
 const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
-const TABLE_NAME = process.env.REACT_APP_TABLE_NAME;
 const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
-const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
+const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/`;
 
 export const fetchAirtableData = async ({ method, url, body }) => {
     const headers = {

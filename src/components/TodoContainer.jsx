@@ -5,7 +5,6 @@ import Loading from "./Loading";
 import TodoList from "./TodoList";
 import { sortByField } from "../utils/sortByField";
 import SortBox from "./SortBox";
-import { useNavigate } from "react-router-dom";
 import { fetchAirtableData } from "../utils/fetchAirtableData";
 
 const GRID_VIEW = "view=Grid view";
@@ -13,7 +12,7 @@ const GRID_VIEW = "view=Grid view";
 const LOCAL_STORAGE_REVERSED_KEY = "todoListIsReversed";
 const LOCAL_STORAGE_SORT_BY_KEY = "todoListSortBy";
 
-const initialSort = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY) ?? "lastModifiedTime";
+const initialSort = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY) ?? "createDateTime";
 const initialIsReversed = JSON.parse(localStorage.getItem(LOCAL_STORAGE_REVERSED_KEY)) ?? true;
 
 const TodoContainer = ({ tableName }) => {
@@ -21,7 +20,6 @@ const TodoContainer = ({ tableName }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [sortBy, setSortBy] = useState(initialSort);
     const [isReversed, setIsReversed] = useState(initialIsReversed);
-    const navigate = useNavigate();
     
     const addTodo = async (newTodo) => {
         const airtableData = {
@@ -31,14 +29,14 @@ const TodoContainer = ({ tableName }) => {
             }
         };
         try {
-            const newTodoRes = await fetchAirtableData({ method: "POST", body: airtableData });
+            const newTodoRes = await fetchAirtableData({ method: "POST", body: airtableData, url: tableName });
             setTodoList(prevTodoList => {
                     const newList = [
                         ...prevTodoList,
                         {
                             id: newTodoRes.id,
-                            lastModifiedTime: newTodoRes.fields.lastModifiedTime,
-                            title: newTodoRes.fields.title
+                            title: newTodoRes.fields.title,
+                            createDateTime: newTodoRes.fields.createDateTime
                         }
                     ];
                     return sortByField(newList, sortBy, isReversed);
@@ -51,7 +49,7 @@ const TodoContainer = ({ tableName }) => {
     
     const removeTodo = async (id) => {
         try {
-            const removedTodoRes = await fetchAirtableData({ method: "DELETE", url: `/${id}` });
+            const removedTodoRes = await fetchAirtableData({ method: "DELETE", url: `${tableName}/${id}` });
             if (removedTodoRes.deleted) {
                 setTodoList(prevState => prevState.filter(todo => removedTodoRes.id !== todo.id));
             }
@@ -63,12 +61,12 @@ const TodoContainer = ({ tableName }) => {
     useEffect(() => {
         const loadTodo = async () => {
             try {
-                const todosRes = await fetchAirtableData({ method: "GET", url: `?${GRID_VIEW}` });
+                const todosRes = await fetchAirtableData({ method: "GET", url: `${tableName}?${GRID_VIEW}` });
                 const todos = todosRes.records.map(todo => {
                     return {
                         id: todo.id,
                         title: todo.fields.title,
-                        lastModifiedTime: todo.fields.lastModifiedTime
+                        createDateTime: todo.fields.createDateTime
                     };
                 });
                 const sortedTodos = sortByField(todos, initialSort, initialIsReversed);
@@ -80,7 +78,7 @@ const TodoContainer = ({ tableName }) => {
             }
         };
         loadTodo();
-    }, []);
+    }, [tableName]);
     
     useEffect(() => {
         setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
@@ -98,11 +96,11 @@ const TodoContainer = ({ tableName }) => {
     return (
         <div className={styles.container}>
             <div className={styles.App}>
-                <AddTodoForm onAddTodo={addTodo}/>
                 {isLoading ? (
                     <Loading/>
                 ) : (
                     <>
+                        <AddTodoForm onAddTodo={addTodo}/>
                         <SortBox
                             isReversed={isReversed}
                             onIsReversedChange={handleIsReversedChange}
