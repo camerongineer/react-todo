@@ -73,10 +73,12 @@ const TodoContainer = () => {
             } catch (error) {
                 console.log(error.message);
                 setTodoList([]);
+            } finally {
+                setIsLoading(false);
             }
         };
         loadTodo();
-        setIsLoading(false);
+        
     }, []);
     
     useEffect(() => {
