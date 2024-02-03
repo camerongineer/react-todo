@@ -50,7 +50,7 @@ const TodoContainer = () => {
         try {
             const removedTodoRes = await fetchAirtableData({ method: "DELETE", url: `/${id}` });
             if (removedTodoRes.deleted) {
-                setTodoList(prevState => prevState.filter(todo => id !== todo.id));
+                setTodoList(prevState => prevState.filter(todo => removedTodoRes.id !== todo.id));
             }
         } catch (error) {
             console.log(error.message);
@@ -77,7 +77,6 @@ const TodoContainer = () => {
             }
         };
         loadTodo();
-        
     }, []);
     
     useEffect(() => {
