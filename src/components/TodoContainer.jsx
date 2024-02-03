@@ -72,7 +72,6 @@ const TodoContainer = () => {
                 setTodoList(sortedTodos);
             } catch (error) {
                 console.log(error.message);
-                setTodoList([]);
             } finally {
                 setIsLoading(false);
             }
