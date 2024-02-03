@@ -23,6 +23,7 @@ button:hover {
     background-color: #ff4d6d;
 }
 
+select,
 input {
     height: 2em;
     border-radius: 15px;
