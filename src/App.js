@@ -8,7 +8,8 @@ import Layout from "./components/Layout";
 import CreateContainer from "./components/CreateContainer";
 import Home from "./components/Home";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { getTableNames } from "./api/airtable";
+import { getTableNames } from "./utils/fetchAirtableData";
+
 
 const router = createBrowserRouter(
     createRoutesFromElements(

@@ -1,9 +1,8 @@
 import axios from "axios";
 
 const BASE_URL = "https://api.airtable.com/v0";
-const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
 const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
-const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/`;
+const TABLES_URL = `meta/bases/${process.env.REACT_APP_AIRTABLE_BASE_ID}/tables`;
 
 export const fetchAirtableData = async ({ method, url, body }) => {
     const headers = {
@@ -13,15 +12,72 @@ export const fetchAirtableData = async ({ method, url, body }) => {
     
     const axiosConfig = {
         method: method,
-        url: `${AIRTABLE_URL}${url ?? ""}`,
+        url: `${BASE_URL}/${url}`,
         headers: headers,
         ...(body ? { data: body } : {})
     };
     
-    try {
-        const response = await axios(axiosConfig);
-        return response.data;
-    } catch (error) {
-        throw new Error(`Error: ${error.response ? error.response.status : "Unknown"}`);
-    }
+    const response = await axios(axiosConfig);
+    return response.data;
 };
+
+export const getTableNames = async () => {
+    const tablesRes = await fetchAirtableData({ method: "GET", url: TABLES_URL });
+    return tablesRes.tables.map(table => {
+        return {
+            id: table.id,
+            name: table.name
+        };
+    });
+};
+
+export const createNewTable = async (tableName) => {
+    const airtableData = {
+        name: tableName,
+        fields: [
+            {
+                "type": "singleLineText",
+                "name": "title"
+            },
+            {
+                "type": "dateTime",
+                "options": {
+                    "dateFormat": {
+                        "name": "local",
+                        "format": "l"
+                    },
+                    "timeFormat": {
+                        "name": "24hour",
+                        "format": "HH:mm"
+                    },
+                    "timeZone": "client"
+                },
+                "name": "createDateTime"
+            },
+            {
+                "type": "dateTime",
+                "options": {
+                    "dateFormat": {
+                        "name": "local",
+                        "format": "l"
+                    },
+                    "timeFormat": {
+                        "name": "24hour",
+                        "format": "HH:mm"
+                    },
+                    "timeZone": "client"
+                },
+                "name": "completeDateTime"
+            },
+            {
+                "type": "singleLineText",
+                "name": "description"
+            }
+        ]
+    };
+    try {
+        await fetchAirtableData({ method: "POST", body: airtableData, url: TABLES_URL });
+    } catch (error) {
+        console.log(error.message);
+    }
+}

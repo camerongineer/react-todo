@@ -6,7 +6,9 @@ import TodoList from "./TodoList";
 import { sortByField } from "../utils/sortByField";
 import SortBox from "./SortBox";
 import { fetchAirtableData } from "../utils/fetchAirtableData";
+import { useNavigate } from "react-router-dom";
 
+const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
 const GRID_VIEW = "view=Grid view";
 
 const LOCAL_STORAGE_REVERSED_KEY = "todoListIsReversed";
@@ -20,6 +22,7 @@ const TodoContainer = ({ tableName }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [sortBy, setSortBy] = useState(initialSort);
     const [isReversed, setIsReversed] = useState(initialIsReversed);
+    const navigate = useNavigate();
     
     const addTodo = async (newTodo) => {
         const airtableData = {
@@ -29,7 +32,7 @@ const TodoContainer = ({ tableName }) => {
             }
         };
         try {
-            const newTodoRes = await fetchAirtableData({ method: "POST", body: airtableData, url: tableName });
+            const newTodoRes = await fetchAirtableData({ method: "POST", body: airtableData, url: `${BASE_ID}/${tableName}` });
             setTodoList(prevTodoList => {
                     const newList = [
                         ...prevTodoList,
@@ -49,7 +52,7 @@ const TodoContainer = ({ tableName }) => {
     
     const removeTodo = async (id) => {
         try {
-            const removedTodoRes = await fetchAirtableData({ method: "DELETE", url: `${tableName}/${id}` });
+            const removedTodoRes = await fetchAirtableData({ method: "DELETE", url: `${BASE_ID}/${tableName}/${id}` });
             if (removedTodoRes.deleted) {
                 setTodoList(prevState => prevState.filter(todo => removedTodoRes.id !== todo.id));
             }
@@ -61,7 +64,7 @@ const TodoContainer = ({ tableName }) => {
     useEffect(() => {
         const loadTodo = async () => {
             try {
-                const todosRes = await fetchAirtableData({ method: "GET", url: `${tableName}?${GRID_VIEW}` });
+                const todosRes = await fetchAirtableData({ method: "GET", url: `${BASE_ID}/${tableName}?${GRID_VIEW}` });
                 const todos = todosRes.records.map(todo => {
                     return {
                         id: todo.id,
@@ -73,12 +76,15 @@ const TodoContainer = ({ tableName }) => {
                 setTodoList(sortedTodos);
             } catch (error) {
                 console.log(error.message);
+                if (error.response.status === 403) {
+                    return navigate(`../create-list?t=${tableName}`)
+                }
             } finally {
                 setIsLoading(false);
             }
         };
         loadTodo();
-    }, [tableName]);
+    }, [navigate, tableName]);
     
     useEffect(() => {
         setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
