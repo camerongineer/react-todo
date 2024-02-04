@@ -38,8 +38,7 @@ const TodoContainer = ({ tableName }) => {
                         ...prevTodoList,
                         {
                             id: newTodoRes.id,
-                            title: newTodoRes.fields.title,
-                            createDateTime: newTodoRes.fields.createDateTime
+                            ...airtableData.fields,
                         }
                     ];
                     return sortByField(newList, sortBy, isReversed);
