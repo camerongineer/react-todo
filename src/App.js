@@ -4,9 +4,9 @@ import {
     Route,
     RouterProvider
 } from "react-router-dom";
-import Layout from "./components/Layout";
+import Layout, { layoutLoader } from "./components/Layout";
 import CreateContainer from "./components/CreateContainer";
-import Home, { homeLoader } from "./components/Home";
+import Home from "./components/Home";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 
@@ -14,7 +14,7 @@ const router = createBrowserRouter(
     createRoutesFromElements(
         <Route
             path="/"
-            loader={homeLoader}
+            loader={layoutLoader}
             element={<Layout/>}
             errorElement={<ErrorBoundary/>}
         >
