@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { createNewTable } from "../utils/fetchAirtableData";
 import RedirectCreate from "./RedirectCreate";
 import RequestCreate from "./RequestCreate";
