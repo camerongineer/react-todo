@@ -23,7 +23,15 @@ export const fetchAirtableData = async ({ method, url, body }) => {
 
 export const getTableNames = async () => {
     const tablesRes = await fetchAirtableData({ method: "GET", url: TABLES_URL });
-    return tablesRes.tables.map(table => {
+    
+    const filteredTables = tablesRes.tables.filter(table => {
+        const requiredFieldNames = ["title", "createDateTime", "description"];
+        return requiredFieldNames.every(fieldName =>
+            table.fields.some(field => field.name === fieldName)
+        );
+    });
+    
+    return filteredTables.map(table => {
         return {
             id: table.id,
             name: table.name
