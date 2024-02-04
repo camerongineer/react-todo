@@ -6,16 +6,15 @@ import {
 } from "react-router-dom";
 import Layout from "./components/Layout";
 import CreateContainer from "./components/CreateContainer";
-import Home from "./components/Home";
+import Home, { homeLoader } from "./components/Home";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { getTableNames } from "./utils/fetchAirtableData";
 
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route
             path="/"
-            loader={getTableNames}
+            loader={homeLoader}
             element={<Layout/>}
             errorElement={<ErrorBoundary/>}
         >
