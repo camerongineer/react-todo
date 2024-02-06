@@ -29,7 +29,8 @@ const TodoContainer = ({
         const airtableData = {
             fields: {
                 title: newTodo,
-                createDateTime: new Date().toISOString()
+                createDateTime: new Date().toISOString(),
+                completeDateTime: null
             }
         };
         try {
@@ -74,7 +75,8 @@ const TodoContainer = ({
                     return {
                         id: todo.id,
                         title: todo.fields.title,
-                        createDateTime: todo.fields.createDateTime
+                        createDateTime: todo.fields.createDateTime,
+                        completeDateTime: todo.fields.completeDateTime
                     };
                 });
                 const sortedTodos = sortByField(todos, initialSortBy, initialIsReversed);
