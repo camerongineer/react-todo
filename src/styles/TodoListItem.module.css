@@ -9,3 +9,7 @@
     margin: 4px 20px 4px 0;
     font-size: xx-large;
 }
+
+.complete {
+    text-decoration: line-through;
+}

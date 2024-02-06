@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 const TodoListItem = ({ item, onRemoveClicked }) =>
     <li className={styles.ListItem}>
-        <div className={styles.row}>
+        <div className={`${styles.row} ${item.completeDateTime ? styles.complete : ""}`}>
             {item.title}
             <button
                 type="button"
