@@ -14,13 +14,14 @@ const GRID_VIEW = "view=Grid view";
 const LOCAL_STORAGE_REVERSED_KEY = "todoListIsReversed";
 const LOCAL_STORAGE_SORT_BY_KEY = "todoListSortBy";
 
-const initialSort = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY) ?? "createDateTime";
-const initialIsReversed = JSON.parse(localStorage.getItem(LOCAL_STORAGE_REVERSED_KEY)) ?? true;
-
-const TodoContainer = ({ tableName }) => {
+const TodoContainer = ({
+    tableName,
+    initialSortBy,
+    initialIsReversed,
+}) => {
     const [todoList, setTodoList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [sortBy, setSortBy] = useState(initialSort);
+    const [sortBy, setSortBy] = useState(initialSortBy);
     const [isReversed, setIsReversed] = useState(initialIsReversed);
     const navigate = useNavigate();
     
@@ -32,13 +33,14 @@ const TodoContainer = ({ tableName }) => {
             }
         };
         try {
-            const newTodoRes = await fetchAirtableData({ method: "POST", body: airtableData, url: `${BASE_ID}/${tableName}` });
+            const newTodoRes = await fetchAirtableData(
+                { method: "POST", body: airtableData, url: `${BASE_ID}/${tableName}` });
             setTodoList(prevTodoList => {
                     const newList = [
                         ...prevTodoList,
                         {
                             id: newTodoRes.id,
-                            ...airtableData.fields,
+                            ...airtableData.fields
                         }
                     ];
                     return sortByField(newList, sortBy, isReversed);
@@ -61,9 +63,13 @@ const TodoContainer = ({ tableName }) => {
     };
     
     useEffect(() => {
+        setSortBy(initialSortBy)
+        setIsReversed(initialIsReversed)
         const loadTodo = async () => {
             try {
-                const todosRes = await fetchAirtableData({ method: "GET", url: `${BASE_ID}/${tableName}?${GRID_VIEW}` });
+                setIsLoading(true);
+                const todosRes = await fetchAirtableData(
+                    { method: "GET", url: `${BASE_ID}/${tableName}?${GRID_VIEW}` });
                 const todos = todosRes.records.map(todo => {
                     return {
                         id: todo.id,
@@ -71,25 +77,33 @@ const TodoContainer = ({ tableName }) => {
                         createDateTime: todo.fields.createDateTime
                     };
                 });
-                const sortedTodos = sortByField(todos, initialSort, initialIsReversed);
+                const sortedTodos = sortByField(todos, initialSortBy, initialIsReversed);
                 setTodoList(sortedTodos);
             } catch (error) {
                 console.log(error.message);
                 if (error.response.status === 403) {
-                    return navigate(`../create-list?t=${tableName}`)
+                    return navigate(`../create-list?t=${tableName}`);
                 }
             } finally {
                 setIsLoading(false);
             }
         };
         loadTodo();
-    }, [navigate, tableName]);
+    }, [initialIsReversed, initialSortBy, navigate, tableName]);
     
     useEffect(() => {
         setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
-        localStorage.setItem(LOCAL_STORAGE_REVERSED_KEY, isReversed);
-        localStorage.setItem(LOCAL_STORAGE_SORT_BY_KEY, sortBy);
-    }, [isReversed, sortBy]);
+        
+        const prevSortByItem = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY);
+        const prevSortBy = prevSortByItem ? JSON.parse(prevSortByItem) : {};
+        const newSortBy = { ...prevSortBy, [tableName]: sortBy };
+        localStorage.setItem(LOCAL_STORAGE_SORT_BY_KEY, JSON.stringify(newSortBy));
+        
+        const prevIsReversedItem = localStorage.getItem(LOCAL_STORAGE_REVERSED_KEY);
+        const prevIsReversed = prevIsReversedItem ? JSON.parse(prevIsReversedItem) : {};
+        const newIsReversed = { ...prevIsReversed, [tableName]: isReversed };
+        localStorage.setItem(LOCAL_STORAGE_REVERSED_KEY, JSON.stringify(newIsReversed));
+    }, [isReversed, sortBy, tableName]);
     
     const handleIsReversedChange = () => setIsReversed(prevState => !prevState);
     
@@ -97,7 +111,7 @@ const TodoContainer = ({ tableName }) => {
         const newSortBy = event.target.value;
         setSortBy(newSortBy);
     };
-
+    
     return (
         <div className={styles.container}>
             <div className={styles.App}>
