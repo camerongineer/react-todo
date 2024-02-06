@@ -30,7 +30,8 @@ const TodoContainer = ({
             fields: {
                 title: newTodo,
                 createDateTime: new Date().toISOString(),
-                completeDateTime: null
+                completeDateTime: null,
+                description: null
             }
         };
         try {
@@ -76,7 +77,8 @@ const TodoContainer = ({
                         id: todo.id,
                         title: todo.fields.title,
                         createDateTime: todo.fields.createDateTime,
-                        completeDateTime: todo.fields.completeDateTime
+                        completeDateTime: todo.fields.completeDateTime,
+                        description: todo.fields.description
                     };
                 });
                 const sortedTodos = sortByField(todos, initialSortBy, initialIsReversed);
