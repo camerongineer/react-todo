@@ -67,7 +67,7 @@ const TodoContainer = ({
     useEffect(() => {
         setSortBy(initialSortBy)
         setIsReversed(initialIsReversed)
-        const loadTodo = async () => {
+        const loadTodos = async () => {
             try {
                 setIsLoading(true);
                 const todosRes = await fetchAirtableData(
@@ -81,7 +81,7 @@ const TodoContainer = ({
                         description: todo.fields.description
                     };
                 });
-                const sortedTodos = sortByField(todos, initialSortBy, initialIsReversed);
+                const sortedTodos = initialSortBy.length ? sortByField(todos, initialSortBy, initialIsReversed) : todos;
                 setTodoList(sortedTodos);
             } catch (error) {
                 console.log(error.message);
@@ -92,11 +92,16 @@ const TodoContainer = ({
                 setIsLoading(false);
             }
         };
-        loadTodo();
+        loadTodos();
     }, [initialIsReversed, initialSortBy, navigate, tableName]);
     
     useEffect(() => {
-        setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
+        setTodoList(prevState => {
+            if (sortBy.length) {
+                return sortByField(prevState, sortBy, isReversed);
+            }
+            return prevState;
+        });
         
         const prevSortByItem = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY);
         const prevSortBy = prevSortByItem ? JSON.parse(prevSortByItem) : {};
