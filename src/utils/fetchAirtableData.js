@@ -1,8 +1,10 @@
 import axios from "axios";
 
 const BASE_URL = "https://api.airtable.com/v0";
+const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
 const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
 const TABLES_URL = `meta/bases/${process.env.REACT_APP_AIRTABLE_BASE_ID}/tables`;
+const GRID_VIEW = "view=Grid view";
 
 export const fetchAirtableData = async ({ method, url, body }) => {
     const headers = {
@@ -19,6 +21,19 @@ export const fetchAirtableData = async ({ method, url, body }) => {
     
     const response = await axios(axiosConfig);
     return response.data;
+};
+
+export const loadTodos = async (tableName) => {
+    const todosRes = await fetchAirtableData({ method: "GET", url: `${BASE_ID}/${tableName}?${GRID_VIEW}` });
+    return todosRes.records.map(todo => {
+        return {
+            id: todo.id,
+            title: todo.fields.title,
+            createDateTime: todo.fields.createDateTime,
+            completeDateTime: todo.fields.completeDateTime,
+            description: todo.fields.description
+        };
+    });
 };
 
 export const getTableNames = async () => {

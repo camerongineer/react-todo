@@ -5,11 +5,10 @@ import Loading from "./Loading";
 import TodoList from "./TodoList";
 import { sortByField } from "../utils/sortByField";
 import SortBox from "./SortBox";
-import { fetchAirtableData } from "../utils/fetchAirtableData";
+import { fetchAirtableData, loadTodos } from "../utils/fetchAirtableData";
 import { useNavigate } from "react-router-dom";
 
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
-const GRID_VIEW = "view=Grid view";
 
 const LOCAL_STORAGE_REVERSED_KEY = "todoListIsReversed";
 const LOCAL_STORAGE_SORT_BY_KEY = "todoListSortBy";
@@ -17,7 +16,7 @@ const LOCAL_STORAGE_SORT_BY_KEY = "todoListSortBy";
 const TodoContainer = ({
     tableName,
     initialSortBy,
-    initialIsReversed,
+    initialIsReversed
 }) => {
     const [todoList, setTodoList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -65,22 +64,12 @@ const TodoContainer = ({
     };
     
     useEffect(() => {
-        setSortBy(initialSortBy)
-        setIsReversed(initialIsReversed)
-        const loadTodos = async () => {
+        setSortBy(initialSortBy);
+        setIsReversed(initialIsReversed);
+        const initTodos = async () => {
             try {
                 setIsLoading(true);
-                const todosRes = await fetchAirtableData(
-                    { method: "GET", url: `${BASE_ID}/${tableName}?${GRID_VIEW}` });
-                const todos = todosRes.records.map(todo => {
-                    return {
-                        id: todo.id,
-                        title: todo.fields.title,
-                        createDateTime: todo.fields.createDateTime,
-                        completeDateTime: todo.fields.completeDateTime,
-                        description: todo.fields.description
-                    };
-                });
+                const todos = await loadTodos();
                 const sortedTodos = initialSortBy.length ? sortByField(todos, initialSortBy, initialIsReversed) : todos;
                 setTodoList(sortedTodos);
             } catch (error) {
@@ -92,7 +81,7 @@ const TodoContainer = ({
                 setIsLoading(false);
             }
         };
-        loadTodos();
+        initTodos();
     }, [initialIsReversed, initialSortBy, navigate, tableName]);
     
     useEffect(() => {
