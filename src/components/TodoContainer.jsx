@@ -69,7 +69,7 @@ const TodoContainer = ({
         const initTodos = async () => {
             try {
                 setIsLoading(true);
-                const todos = await loadTodos();
+                const todos = await loadTodos(tableName);
                 const sortedTodos = initialSortBy.length ? sortByField(todos, initialSortBy, initialIsReversed) : todos;
                 setTodoList(sortedTodos);
             } catch (error) {
@@ -85,22 +85,20 @@ const TodoContainer = ({
     }, [initialIsReversed, initialSortBy, navigate, tableName]);
     
     useEffect(() => {
-        setTodoList(prevState => {
-            if (sortBy.length) {
-                return sortByField(prevState, sortBy, isReversed);
-            }
-            return prevState;
-        });
-        
-        const prevSortByItem = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY);
-        const prevSortBy = prevSortByItem ? JSON.parse(prevSortByItem) : {};
-        const newSortBy = { ...prevSortBy, [tableName]: sortBy };
-        localStorage.setItem(LOCAL_STORAGE_SORT_BY_KEY, JSON.stringify(newSortBy));
-        
-        const prevIsReversedItem = localStorage.getItem(LOCAL_STORAGE_REVERSED_KEY);
-        const prevIsReversed = prevIsReversedItem ? JSON.parse(prevIsReversedItem) : {};
-        const newIsReversed = { ...prevIsReversed, [tableName]: isReversed };
-        localStorage.setItem(LOCAL_STORAGE_REVERSED_KEY, JSON.stringify(newIsReversed));
+        const sortTodos = async () => {
+            const sortedTodos = sortBy ? sortByField(todoList, sortBy, isReversed) : await loadTodos(tableName);
+            setTodoList(sortedTodos);
+            const prevSortByItem = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY);
+            const prevSortBy = prevSortByItem ? JSON.parse(prevSortByItem) : {};
+            const newSortBy = { ...prevSortBy, [tableName]: sortBy };
+            localStorage.setItem(LOCAL_STORAGE_SORT_BY_KEY, JSON.stringify(newSortBy));
+            
+            const prevIsReversedItem = localStorage.getItem(LOCAL_STORAGE_REVERSED_KEY);
+            const prevIsReversed = prevIsReversedItem ? JSON.parse(prevIsReversedItem) : {};
+            const newIsReversed = { ...prevIsReversed, [tableName]: isReversed };
+            localStorage.setItem(LOCAL_STORAGE_REVERSED_KEY, JSON.stringify(newIsReversed));
+        }
+        sortTodos()
     }, [isReversed, sortBy, tableName]);
     
     const handleIsReversedChange = () => setIsReversed(prevState => !prevState);
