@@ -9,9 +9,7 @@ const homeLoader = async ({ params }) => {
     const tableName = params.tableName;
     
     const initialSortByItem = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY);
-    const initialSortBy = initialSortByItem
-        ? JSON.parse(initialSortByItem)[tableName] ?? "createDateTime"
-        : "createDateTime";
+    const initialSortBy = initialSortByItem ? JSON.parse(initialSortByItem)[tableName] ?? "" : "";
     
     const initialIsReversedItem = localStorage.getItem(LOCAL_STORAGE_REVERSED_KEY);
     const initialIsReversed = initialIsReversedItem ? JSON.parse(initialIsReversedItem)[tableName] ?? true : true;
