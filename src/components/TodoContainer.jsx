@@ -63,6 +63,30 @@ const TodoContainer = ({
         }
     };
     
+    const toggleCompleteTodo = async (todoItem) => {
+        try {
+            const toggledTodo = {
+                ...todoItem,
+                completeDateTime: todoItem.completeDateTime ? null : new Date().toISOString()
+            };
+            const airtableData = {
+                fields: {
+                    completeDateTime: toggledTodo.completeDateTime
+                }
+            };
+            const res = await fetchAirtableData({
+                method: "PATCH",
+                url: `${BASE_ID}/${tableName}/${todoItem.id}`,
+                body: airtableData
+            });
+            
+            const filteredTodos = todoList.filter(todo => todo.id !== res.id);
+            setTodoList(sortByField([...filteredTodos, toggledTodo], sortBy, isReversed));
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+    
     useEffect(() => {
         setSortBy(initialSortBy);
         setIsReversed(initialIsReversed);
@@ -70,7 +94,7 @@ const TodoContainer = ({
             try {
                 setIsLoading(true);
                 const todos = await loadTodos(tableName);
-                const sortedTodos = initialSortBy.length ? sortByField(todos, initialSortBy, initialIsReversed) : todos;
+                const sortedTodos = sortByField(todos, initialSortBy, initialIsReversed);
                 setTodoList(sortedTodos);
             } catch (error) {
                 console.log(error.message);
@@ -86,8 +110,7 @@ const TodoContainer = ({
     
     useEffect(() => {
         const sortTodos = async () => {
-            const sortedTodos = sortBy ? sortByField(todoList, sortBy, isReversed) : await loadTodos(tableName);
-            setTodoList(sortedTodos);
+            setTodoList(prevState => sortByField(prevState, sortBy, isReversed));
             const prevSortByItem = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY);
             const prevSortBy = prevSortByItem ? JSON.parse(prevSortByItem) : {};
             const newSortBy = { ...prevSortBy, [tableName]: sortBy };
@@ -97,8 +120,8 @@ const TodoContainer = ({
             const prevIsReversed = prevIsReversedItem ? JSON.parse(prevIsReversedItem) : {};
             const newIsReversed = { ...prevIsReversed, [tableName]: isReversed };
             localStorage.setItem(LOCAL_STORAGE_REVERSED_KEY, JSON.stringify(newIsReversed));
-        }
-        sortTodos()
+        };
+        sortTodos();
     }, [isReversed, sortBy, tableName]);
     
     const handleIsReversedChange = () => setIsReversed(prevState => !prevState);
@@ -125,6 +148,7 @@ const TodoContainer = ({
                         <TodoList
                             todoList={todoList}
                             onRemoveTodo={removeTodo}
+                            onCheckToggled={toggleCompleteTodo}
                         />
                     </>
                 )}
