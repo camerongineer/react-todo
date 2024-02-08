@@ -3,11 +3,22 @@ import styles from "../styles/TodoListItem.module.css";
 import { ReactComponent as Remove } from "../assets/delete.svg";
 import PropTypes from "prop-types";
 
-const TodoListItem = ({ item, onRemoveClicked }) =>
-    <li className={styles.ListItem}>
+const TodoListItem = ({ item, onRemoveClicked, onCheckToggled }) => {
+    const handleCheckToggled = () => onCheckToggled(item);
+    
+    return <li className={styles.ListItem}>
         <div className={`${styles.row} ${item.completeDateTime ? styles.complete : ""}`}>
-            {item.title}
+            <span>
+                <input
+                    className={styles.checkbox}
+                    type="checkbox"
+                    defaultChecked={!!item.completeDateTime}
+                    onChange={handleCheckToggled}
+                />
+                {item.title}
+            </span>
             <button
+                id={styles.removeButton}
                 type="button"
                 data-testid="remove-button"
                 onClick={() => onRemoveClicked(item.id)}
@@ -16,13 +27,12 @@ const TodoListItem = ({ item, onRemoveClicked }) =>
             </button>
         </div>
     </li>;
+};
 
 TodoListItem.propTypes = {
     item: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-    }).isRequired,
-    onRemoveClicked: PropTypes.func.isRequired
+        id: PropTypes.string.isRequired, title: PropTypes.string.isRequired
+    }).isRequired, onRemoveClicked: PropTypes.func.isRequired
 };
 
 export default TodoListItem;
