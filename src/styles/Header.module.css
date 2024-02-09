@@ -1,3 +1,19 @@
+.Container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+}
+
+.Back {
+    align-self: center;
+}
+
+.Back:hover {
+    background-color: #590d22;
+    border-radius: 8px;
+}
+
 .Logo {
     display: flex;
     flex-direction: row;
@@ -5,6 +21,8 @@
     align-items: center;
     gap: .25em;
     user-select: none;
+    margin-left: 45px;
+    margin-right: 15px;
 }
 
 .Icon path {

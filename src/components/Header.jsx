@@ -1,15 +1,19 @@
 import React from "react";
 import styles from "../styles/Header.module.css";
-import {ReactComponent as Notebook} from "../assets/notebook.svg";
-import { NavLink } from "react-router-dom";
+import { ReactComponent as Back } from "../assets/back.svg";
+import { ReactComponent as Notebook } from "../assets/notebook.svg";
+import { useNavigate } from "react-router-dom";
 
-const Header = ({ tableName, tables }) => {
+const Header = ({ tableName }) => {
+    const navigate = useNavigate();
     return (
-        <div>
-            <h1 className={styles.Logo}>{tableName}<Notebook className={styles.Icon}/>List</h1>
-            {tables?.map(table => <NavLink key={table.id} to={`list/${table.name}`}>{table.name}</NavLink>)}
-            <NavLink to="create-list">Plus</NavLink>
-        </div>
+        <>
+            {tableName &&
+                <div className={styles.Container}>
+                    <h1 className={styles.Logo}>{tableName}<Notebook className={styles.Icon}/>List</h1>
+                    <Back className={styles.Back} onClick={() => navigate("/")}/>
+                </div>}
+        </>
     );
 };
 
