@@ -8,11 +8,10 @@ const Header = ({ tableName }) => {
     const navigate = useNavigate();
     return (
         <>
-            {tableName &&
-                <div className={styles.Container}>
-                    <h1 className={styles.Logo}>{tableName}<Notebook className={styles.Icon}/>List</h1>
-                    <Back className={styles.Back} onClick={() => navigate("/")}/>
-                </div>}
+            <div className={styles.Container}>
+                <h1 className={styles.Logo}>{tableName}<Notebook className={styles.Icon}/>List</h1>
+                <Back className={styles.Back} onClick={() => navigate("/")}/>
+            </div>
         </>
     );
 };
