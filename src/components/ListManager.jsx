@@ -5,7 +5,7 @@ import { useLoaderData } from "react-router-dom";
 const LOCAL_STORAGE_REVERSED_KEY = "todoListIsReversed";
 const LOCAL_STORAGE_SORT_BY_KEY = "todoListSortBy";
 
-const homeLoader = async ({ params }) => {
+const listManagerLoader = async ({ params }) => {
     const tableName = params.tableName;
     
     const initialSortByItem = localStorage.getItem(LOCAL_STORAGE_SORT_BY_KEY);
@@ -17,7 +17,7 @@ const homeLoader = async ({ params }) => {
     return { tableName, initialSortBy, initialIsReversed };
 };
 
-const Home = () => {
+const ListManager = () => {
     const { tableName, initialSortBy, initialIsReversed } = useLoaderData();
     return (
         <TodoContainer
@@ -28,5 +28,5 @@ const Home = () => {
     );
 };
 
-export { homeLoader };
-export default Home;
+export { listManagerLoader };
+export default ListManager;

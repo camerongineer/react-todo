@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Layout from "./components/Layout";
 import CreateContainer from "./components/CreateContainer";
-import Home, { homeLoader } from "./components/Home";
+import ListManager, { listManagerLoader } from "./components/ListManager";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Landing, { landingLoader } from "./components/Landing";
 
@@ -25,8 +25,8 @@ const router = createBrowserRouter(
             />
             <Route
                 path="list/:tableName"
-                element={<Home/>}
-                loader={homeLoader}
+                element={<ListManager/>}
+                loader={listManagerLoader}
             />
             <Route
                 path="create-list"
