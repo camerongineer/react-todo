@@ -16,8 +16,18 @@ const RedirectCreate = ({
             <Header tableName={tableName}/>
             <h3>"{tableName}" doesn't exist. Would you like create a list by this name?</h3>
             <div className={styles.ButtonContainer}>
-                <button onClick={handleYesClicked}>Yes</button>
-                <button onClick={handleNoClicked}>No</button>
+                <button
+                    onClick={handleYesClicked}
+                    className={styles.Button}
+                >
+                    Yes
+                </button>
+                <button
+                    onClick={handleNoClicked}
+                    className={styles.Button}
+                >
+                    No
+                </button>
             </div>
         </div>
     );
