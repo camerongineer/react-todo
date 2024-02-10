@@ -6,9 +6,10 @@ import LandingMenuButton from "./LandingMenuButton";
 import {ReactComponent as Plus} from "../assets/plus.svg";
 
 const landingLoader = async () => {
-    const tables = await getTableNames();
+    let tables = await getTableNames();
     if (!tables.length || !tables.some(table => table.name === "Todo")) {
         await createNewTable("Todo");
+        tables = await getTableNames();
     }
     return tables;
 };
