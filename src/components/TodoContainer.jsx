@@ -7,6 +7,7 @@ import { sortByField } from "../utils/sortByField";
 import SortBox from "./SortBox";
 import { fetchAirtableData, loadTodos } from "../utils/fetchAirtableData";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
 
@@ -155,6 +156,12 @@ const TodoContainer = ({
             </div>
         </div>
     );
+};
+
+TodoContainer.propTypes = {
+    tableName: PropTypes.string.isRequired,
+    initialSortBy: PropTypes.string.isRequired,
+    initialIsReversed: PropTypes.bool.isRequired
 };
 
 export default TodoContainer;

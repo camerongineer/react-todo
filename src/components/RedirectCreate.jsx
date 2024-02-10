@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/RedirectCreate.module.css";
+import PropTypes from "prop-types";
 
 const RedirectCreate = ({
     tableName,
@@ -31,6 +32,11 @@ const RedirectCreate = ({
             </div>
         </div>
     );
+};
+
+RedirectCreate.propTypes = {
+    tableName: PropTypes.string.isRequired,
+    onCreateClicked: PropTypes.func.isRequired
 };
 
 export default RedirectCreate;

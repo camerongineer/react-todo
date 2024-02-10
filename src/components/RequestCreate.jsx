@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputWithLabel from "./InputWithLabel";
 import Header from "./Header";
 import styles from "../styles/RequestCreate.module.css";
+import PropTypes from "prop-types";
 
 const RequestCreate = ({
     onCreateClicked
@@ -37,6 +38,10 @@ const RequestCreate = ({
             </form>
         </>
     );
+};
+
+RequestCreate.propTypes = {
+    onCreateClicked: PropTypes.func.isRequired
 };
 
 export default RequestCreate;

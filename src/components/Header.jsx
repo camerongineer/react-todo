@@ -3,6 +3,7 @@ import styles from "../styles/Header.module.css";
 import { ReactComponent as Back } from "../assets/back.svg";
 import { ReactComponent as Notebook } from "../assets/notebook.svg";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const Header = ({ tableName }) => {
     const navigate = useNavigate();
@@ -14,6 +15,10 @@ const Header = ({ tableName }) => {
             </div>
         </>
     );
+};
+
+Header.propTypes = {
+    tableName: PropTypes.string
 };
 
 export default Header;
