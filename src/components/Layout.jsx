@@ -9,7 +9,7 @@ const Layout = () => {
     return (
         <div className={styles.Container}>
             <div className={styles.App}>
-                <Header tableName={tableName}/>
+                {!!tableName?.length && <Header tableName={tableName}/>}
                 <Outlet/>
             </div>
         </div>
