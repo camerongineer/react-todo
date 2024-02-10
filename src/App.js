@@ -1,29 +1,27 @@
 import {
     createBrowserRouter,
-    createRoutesFromElements, redirect,
+    createRoutesFromElements,
     Route,
     RouterProvider
 } from "react-router-dom";
-import Layout, { layoutLoader } from "./components/Layout";
+import Layout from "./components/Layout";
 import CreateContainer from "./components/CreateContainer";
 import Home, { homeLoader } from "./components/Home";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Landing, { landingLoader } from "./components/Landing";
 
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route
             path="/"
-            loader={layoutLoader}
             element={<Layout/>}
             errorElement={<ErrorBoundary/>}
         >
             <Route
                 index
-                loader={() => {
-                    const recentList = localStorage.getItem("todoListRecent") ?? "Todo";
-                    throw redirect(`/list/${recentList}`);
-                }}
+                loader={landingLoader}
+                element={<Landing/>}
             />
             <Route
                 path="list/:tableName"
