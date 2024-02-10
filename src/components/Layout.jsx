@@ -1,31 +1,19 @@
 import React from "react";
 import Header from "./Header";
-import { Outlet, redirect, useLoaderData, useParams } from "react-router-dom";
-import { createNewTable, getTableNames } from "../utils/fetchAirtableData";
-
-const layoutLoader = async () => {
-    const tables = await getTableNames();
-    if (!tables.length || !tables.some(table => table.name === "Todo")) {
-        await createNewTable("Todo");
-        throw redirect("/list/Todo");
-    }
-    return tables;
-};
+import styles from "../styles/Layout.module.css";
+import { Outlet, useParams } from "react-router-dom";
 
 const Layout = () => {
-    const tables = useLoaderData();
     const { tableName } = useParams();
     
     return (
-        <div>
-            <Header
-                tableName={tableName}
-                tables={tables}
-            />
-            <Outlet/>
+        <div className={styles.Container}>
+            <div className={styles.App}>
+                <Header tableName={tableName}/>
+                <Outlet/>
+            </div>
         </div>
     );
 };
 
-export { layoutLoader };
 export default Layout;
