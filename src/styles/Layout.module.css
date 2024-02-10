@@ -1,3 +1,10 @@
+.Container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
 .App {
     width: clamp(280px, 100%, 720px);
 }
