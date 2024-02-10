@@ -9,7 +9,7 @@ const Header = ({ tableName }) => {
     return (
         <>
             <div className={styles.Container}>
-                <h1 className={styles.Logo}>{tableName}<Notebook className={styles.Icon}/>List</h1>
+                <h1 className={styles.Logo}>{tableName || "?"}<Notebook className={styles.Icon}/>List</h1>
                 <Back className={styles.Back} onClick={() => navigate("/")}/>
             </div>
         </>
