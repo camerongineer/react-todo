@@ -9,6 +9,12 @@
     user-select: none;
 }
 
+@media (max-width: 600px) {
+    .Container {
+        justify-content: center;
+    }
+}
+
 .Ascending {
     transform: rotate(180deg);
 }

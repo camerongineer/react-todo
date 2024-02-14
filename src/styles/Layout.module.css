@@ -1,13 +1,8 @@
-.Logo {
+.Container {
+    width: 100%;
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    align-items: center;
-    gap: .25em;
-}
-
-.Icon path {
-    fill: #590d22;
+    align-content: center;
 }
 
 .App {

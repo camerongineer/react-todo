@@ -17,10 +17,11 @@ const SortBox = ({
                 value={sortField}
                 onChange={onSortFieldChange}
             >
+                <option value=""></option>
                 <option value="title">Title</option>
-                <option value="lastModifiedTime">Recently Updated</option>
+                <option value="createDateTime">Date Added</option>
             </select>
-            <Arrow className={isReversed ? styles.Descending : styles.Ascending} onClick={onIsReversedChange}/>
+            {!!sortField.length && <Arrow className={isReversed ? styles.Descending : styles.Ascending} onClick={onIsReversedChange}/>}
         </div>
     );
 };

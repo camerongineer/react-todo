@@ -2,9 +2,9 @@ import axios from "axios";
 
 const BASE_URL = "https://api.airtable.com/v0";
 const BASE_ID = process.env.REACT_APP_AIRTABLE_BASE_ID;
-const TABLE_NAME = process.env.REACT_APP_TABLE_NAME;
 const API_TOKEN = process.env.REACT_APP_AIRTABLE_API_TOKEN;
-const AIRTABLE_URL = `${BASE_URL}/${BASE_ID}/${TABLE_NAME}`;
+const TABLES_URL = `meta/bases/${process.env.REACT_APP_AIRTABLE_BASE_ID}/tables`;
+const GRID_VIEW = "view=Grid view";
 
 export const fetchAirtableData = async ({ method, url, body }) => {
     const headers = {
@@ -14,15 +14,93 @@ export const fetchAirtableData = async ({ method, url, body }) => {
     
     const axiosConfig = {
         method: method,
-        url: `${AIRTABLE_URL}${url ?? ""}`,
+        url: `${BASE_URL}/${url}`,
         headers: headers,
         ...(body ? { data: body } : {})
     };
     
-    try {
-        const response = await axios(axiosConfig);
-        return response.data;
-    } catch (error) {
-        throw new Error(`Error: ${error.response ? error.response.status : "Unknown"}`);
-    }
+    const response = await axios(axiosConfig);
+    return response.data;
 };
+
+export const loadTodos = async (tableName) => {
+    const todosRes = await fetchAirtableData({ method: "GET", url: `${BASE_ID}/${tableName}?${GRID_VIEW}` });
+    return todosRes.records.map(todo => {
+        return {
+            id: todo.id,
+            title: todo.fields.title,
+            createDateTime: todo.fields.createDateTime,
+            completeDateTime: todo.fields.completeDateTime,
+            description: todo.fields.description
+        };
+    });
+};
+
+export const getTableNames = async () => {
+    const tablesRes = await fetchAirtableData({ method: "GET", url: TABLES_URL });
+    
+    const filteredTables = tablesRes.tables.filter(table => {
+        const requiredFieldNames = ["title", "createDateTime", "description"];
+        return requiredFieldNames.every(fieldName =>
+            table.fields.some(field => field.name === fieldName)
+        );
+    });
+    
+    return filteredTables.map(table => {
+        return {
+            id: table.id,
+            name: table.name
+        };
+    });
+};
+
+export const createNewTable = async (tableName) => {
+    const airtableData = {
+        name: tableName,
+        fields: [
+            {
+                "type": "singleLineText",
+                "name": "title"
+            },
+            {
+                "type": "dateTime",
+                "options": {
+                    "dateFormat": {
+                        "name": "local",
+                        "format": "l"
+                    },
+                    "timeFormat": {
+                        "name": "24hour",
+                        "format": "HH:mm"
+                    },
+                    "timeZone": "client"
+                },
+                "name": "createDateTime"
+            },
+            {
+                "type": "dateTime",
+                "options": {
+                    "dateFormat": {
+                        "name": "local",
+                        "format": "l"
+                    },
+                    "timeFormat": {
+                        "name": "24hour",
+                        "format": "HH:mm"
+                    },
+                    "timeZone": "client"
+                },
+                "name": "completeDateTime"
+            },
+            {
+                "type": "singleLineText",
+                "name": "description"
+            }
+        ]
+    };
+    try {
+        await fetchAirtableData({ method: "POST", body: airtableData, url: TABLES_URL });
+    } catch (error) {
+        console.log(error.message);
+    }
+}

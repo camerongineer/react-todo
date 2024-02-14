@@ -4,24 +4,33 @@ import {
     Route,
     RouterProvider
 } from "react-router-dom";
-import TodoContainer from "./components/TodoContainer";
 import Layout from "./components/Layout";
+import CreateContainer from "./components/CreateContainer";
+import ListManager, { listManagerLoader } from "./components/ListManager";
+import ErrorBoundary from "./components/ErrorBoundary";
+import Landing, { landingLoader } from "./components/Landing";
+
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route
             path="/"
             element={<Layout/>}
+            errorElement={<ErrorBoundary/>}
         >
             <Route
                 index
-                element={<TodoContainer/>}
+                loader={landingLoader}
+                element={<Landing/>}
             />
             <Route
-                path="new"
-                element={
-                    <h1>New Todo List</h1>
-                }
+                path="list/:tableName"
+                element={<ListManager/>}
+                loader={listManagerLoader}
+            />
+            <Route
+                path="create-list"
+                element={<CreateContainer/>}
             />
         </Route>
     )

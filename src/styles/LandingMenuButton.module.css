@@ -1,0 +1,40 @@
+.Container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+}
+
+.MenuButton {
+    flex: 1;
+    padding: 0 15px;
+    width: fit-content;
+    height: initial;
+    aspect-ratio: auto;
+    background-color: #ff8fa3;
+    cursor: pointer;
+    border-radius: 25px;
+    font-size: large;
+    box-shadow: 5px 5px 5px black;
+}
+
+.MenuButton:hover {
+    background-color: #ff4d6d;
+}
+
+.Logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: .25em;
+    user-select: none;
+}
+
+.Icon {
+    width: 35px;
+}
+
+.Icon path {
+    fill: #590d22;
+}

@@ -1,0 +1,10 @@
+.ButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.Button {
+    min-width: 60px;
+}

@@ -1,5 +1,12 @@
 .ListItem {
     font-weight: bold;
+    list-style-type: none;
+    width: 100%;
+}
+
+.checkbox {
+    width: 1em;
+    margin-right: 1em;
 }
 
 .row {
@@ -8,4 +15,12 @@
     align-items: center;
     margin: 4px 20px 4px 0;
     font-size: xx-large;
+}
+
+.remove-button {
+    align-self: end;
+}
+
+.complete {
+    text-decoration: line-through;
 }

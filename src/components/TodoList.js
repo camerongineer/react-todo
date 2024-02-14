@@ -2,12 +2,13 @@ import React from "react";
 import TodoListItem from "./TodoListItem";
 import PropTypes from "prop-types";
 
-const TodoList = ({todoList, onRemoveTodo}) => (
+const TodoList = ({todoList, onRemoveTodo, onCheckToggled}) => (
     <ul>{todoList.map(listItem =>
         <TodoListItem
             key={listItem.id}
             item={listItem}
             onRemoveClicked={onRemoveTodo}
+            onCheckToggled={onCheckToggled}
         />)}
     </ul>);
 

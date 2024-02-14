@@ -1,13 +1,17 @@
-import React from 'react';
+import React from "react";
+import Header from "./Header";
 import styles from "../styles/Layout.module.css";
-import {ReactComponent as Notebook} from "../assets/notebook.svg";
-import {Outlet} from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 const Layout = () => {
+    const { tableName } = useParams();
+    
     return (
-        <div>
-            <h1 className={styles.Logo}>Todo<Notebook className={styles.Icon}/>List</h1>
-            <Outlet/>
+        <div className={styles.Container}>
+            <div className={styles.App}>
+                {!!tableName?.length && <Header tableName={tableName}/>}
+                <Outlet/>
+            </div>
         </div>
     );
 };
